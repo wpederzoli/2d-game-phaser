@@ -2,7 +2,7 @@ import * as Phaser from "phaser";
 
 const PLATFORM_HEIGHT = 6;
 const PLATFORM_WIDTH = 4;
-const ASSET_SIZE = 64;
+export const ASSET_SIZE = 64;
 const PLATFORM_INITIAL_X = 820;
 const PLATFORM_INITIAL_Y = 300;
 
