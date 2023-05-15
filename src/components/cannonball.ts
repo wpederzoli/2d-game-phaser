@@ -2,15 +2,17 @@ import * as Phaser from "phaser";
 
 export default class Cannonball {
   private sceneRef: Phaser.Scene;
+  private platformBlocks: Phaser.Physics.Arcade.StaticGroup;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, blocks: Phaser.Physics.Arcade.StaticGroup) {
     this.sceneRef = scene;
+    this.platformBlocks = blocks;
   }
 
   shootTo(targetX: number, targetY: number, origin: Phaser.Math.Vector2) {
-    const cannonball = this.sceneRef.add.sprite(
+    const cannonball = this.sceneRef.physics.add.sprite(
       origin.x,
-      origin.y + 32,
+      origin.y,
       "cannonball"
     );
 
@@ -21,6 +23,18 @@ export default class Cannonball {
       duration: 1000,
       onComplete: () => {
         cannonball.destroy();
+      },
+      onUpdate: () => {
+        const { x, y } = cannonball;
+        this.sceneRef.physics.overlap(
+          cannonball,
+          this.platformBlocks,
+          (ball, block: Phaser.Physics.Arcade.Sprite) => {
+            if (block.getBounds().contains(targetX, targetY)) {
+              block.destroy();
+            }
+          }
+        );
       },
     });
   }

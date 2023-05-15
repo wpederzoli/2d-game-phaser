@@ -28,7 +28,7 @@ export default class GamePlayScene extends Phaser.Scene {
 
     this.platformBlocks = createPlatforms(this);
     this.pirate = new Pirate(this, 143, 600, "pirate");
-    this.cannonball = new Cannonball(this);
+    this.cannonball = new Cannonball(this, this.platformBlocks);
 
     this.input.mouse.disableContextMenu();
     this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
