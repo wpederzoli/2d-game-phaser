@@ -4,7 +4,8 @@ import Pirate from "../components/pirate";
 import Cannonball from "../components/cannonball";
 
 export default class GamePlayScene extends Phaser.Scene {
-  platform: Platform;
+  platformA: Platform;
+  platformB: Platform;
   pirate: Pirate;
   cannonball: Cannonball;
 
@@ -26,9 +27,10 @@ export default class GamePlayScene extends Phaser.Scene {
     const scale = Math.max(scaleX, scaleY);
     water.setScale(scale).setScrollFactor(0);
 
-    this.platform = new Platform(this, 10, 200);
+    this.platformA = new Platform(this, 10, 200);
+    this.platformB = new Platform(this, 800, 200, true);
     this.pirate = new Pirate(this, 80, 300, "pirate");
-    this.cannonball = new Cannonball(this, this.platform.getBlocks());
+    this.cannonball = new Cannonball(this);
 
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse.disableContextMenu();

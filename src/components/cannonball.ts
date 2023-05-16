@@ -1,12 +1,11 @@
 import * as Phaser from "phaser";
+import GamePlayScene from "../scenes/gameplay";
 
 export default class Cannonball {
-  private sceneRef: Phaser.Scene;
-  private platformBlocks: Phaser.Physics.Arcade.StaticGroup;
+  private sceneRef: GamePlayScene;
 
-  constructor(scene: Phaser.Scene, blocks: Phaser.Physics.Arcade.StaticGroup) {
+  constructor(scene: GamePlayScene) {
     this.sceneRef = scene;
-    this.platformBlocks = blocks;
   }
 
   shootTo(targetX: number, targetY: number, origin: Phaser.Math.Vector2) {
@@ -27,7 +26,7 @@ export default class Cannonball {
       onUpdate: () => {
         this.sceneRef.physics.overlap(
           cannonball,
-          this.platformBlocks,
+          this.sceneRef.platformB.getBlocks(),
           (_, block: Phaser.Physics.Arcade.Sprite) => {
             if (block.getBounds().contains(targetX, targetY)) {
               block.destroy();
