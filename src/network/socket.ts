@@ -11,12 +11,8 @@ export default class SocketConnector {
   }
 
   private setup() {
-    try {
-      this.socket.on("connect", () => {
-        console.log("Welcome to the server");
-      });
-    } catch (e) {
-      console.log("Error: ", e);
-    }
+    this.socket.on("connect", () => {
+      console.log("Welcome to the server");
+    });
   }
 }

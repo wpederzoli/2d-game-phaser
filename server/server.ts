@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import http from "http";
-import cors from "cors";
 import { Server } from "socket.io";
 
 const port = process.env.PORT || 3000;
