@@ -39,12 +39,12 @@ export default class GamePlayScene extends Phaser.Scene {
         }
       }
       if (pointer.leftButtonDown()) {
-        this.setTargetPosition(pointer);
+        this.movePlayer(pointer);
       }
     });
   }
 
-  setTargetPosition(pointer: Phaser.Input.Pointer) {
+  movePlayer(pointer: Phaser.Input.Pointer) {
     const closestBlock = getClickedBlock(
       new Phaser.Math.Vector2(pointer.x, pointer.y),
       this.platformBlocks
