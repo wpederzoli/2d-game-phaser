@@ -30,6 +30,7 @@ export default class GamePlayScene extends Phaser.Scene {
     this.pirate = new Pirate(this, 143, 600, "pirate");
     this.cannonball = new Cannonball(this, this.platformBlocks);
 
+    this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse.disableContextMenu();
     this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
       if (pointer.rightButtonDown()) {
