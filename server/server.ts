@@ -1,12 +1,26 @@
 import express, { Request, Response } from "express";
+import http from "http";
+import cors from "cors";
+import { Server } from "socket.io";
 
-const app = express();
 const port = process.env.PORT || 3000;
+const app = express();
+const server = http.createServer(app);
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("hello, pirates!");
+const io = new Server(server, {
+  cors: { origin: "http://127.0.0.1:8085" },
 });
 
-app.listen(port, () => {
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
+  });
+});
+
+server.listen(port, () => {
   console.log("server running");
 });
+
+io.listen(server);

@@ -2,8 +2,10 @@ import * as Phaser from "phaser";
 import Platform from "../components/platform";
 import Pirate from "../components/pirate";
 import Cannonball from "../components/cannonball";
+import SocketConnector from "../network/socket";
 
 export default class GamePlayScene extends Phaser.Scene {
+  private socketConnection: SocketConnector | undefined;
   platformA: Platform | undefined;
   platformB: Platform | undefined;
   pirate: Pirate | undefined;
@@ -27,6 +29,7 @@ export default class GamePlayScene extends Phaser.Scene {
     const scale = Math.max(scaleX, scaleY);
     water.setScale(scale).setScrollFactor(0);
 
+    this.socketConnection = new SocketConnector();
     this.platformA = new Platform(this, 10, 200);
     this.platformB = new Platform(this, 800, 200, true);
     this.pirate = new Pirate(this, 80, 300, "pirate");
