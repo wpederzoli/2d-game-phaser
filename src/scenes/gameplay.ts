@@ -4,10 +4,10 @@ import Pirate from "../components/pirate";
 import Cannonball from "../components/cannonball";
 
 export default class GamePlayScene extends Phaser.Scene {
-  platformA: Platform;
-  platformB: Platform;
-  pirate: Pirate;
-  cannonball: Cannonball;
+  platformA: Platform | undefined;
+  platformB: Platform | undefined;
+  pirate: Pirate | undefined;
+  cannonball: Cannonball | undefined;
 
   constructor() {
     super({ key: "GamePlayScene" });
@@ -33,10 +33,10 @@ export default class GamePlayScene extends Phaser.Scene {
     this.cannonball = new Cannonball(this);
 
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
-    this.input.mouse.disableContextMenu();
+    this.input.mouse?.disableContextMenu();
   }
 
   update() {
-    this.pirate.update();
+    this.pirate?.update();
   }
 }

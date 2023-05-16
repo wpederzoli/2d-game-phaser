@@ -56,19 +56,19 @@ export default class Platform {
       rect.setName("hover");
     });
     block.on("pointerout", () => {
-      this.sceneRef.children.getByName("hover").destroy();
+      this.sceneRef.children.getByName("hover")?.destroy();
     });
     block.on("pointerdown", () => {
       !enemy &&
         this.sceneRef.input.activePointer.leftButtonDown() &&
-        this.sceneRef.pirate.setMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
+        this.sceneRef.pirate?.setMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
 
       enemy &&
         this.sceneRef.input.activePointer.rightButtonDown() &&
-        this.sceneRef.cannonball.shootTo(
+        this.sceneRef.cannonball?.shootTo(
           x,
           y,
-          this.sceneRef.pirate.getPosition()
+          this.sceneRef.pirate?.getPosition() as Phaser.Math.Vector2
         );
     });
   };

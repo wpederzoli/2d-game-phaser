@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5"
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "dist",
+    "strict": true
   },
-  "include": ["src/*"],
+  "include": ["src/*", "server/**/*"],
+  "exclude": ["node_modules/*", "dist/*"],
   "lib": ["es6", "dom", "dom.iterable", "scripthost"],
   "typeRoots": ["./node_modules/phaser/types"],
   "types": ["Phaser"]
