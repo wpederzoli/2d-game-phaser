@@ -13,7 +13,20 @@ export const createPlatforms = (scene: Phaser.Scene) => {
     const posY = i * WOOD_SPRITE_SIZE + PLATFORM_INITIAL_Y;
     for (let j = 1; j < PLATFORM_WIDTH; j++) {
       const posX = j * WOOD_SPRITE_SIZE;
-      platformBlocks.create(posX, posY, "wood");
+
+      const t = scene.add.sprite(posX, posY, "wood");
+      t.setInteractive(
+        new Phaser.Geom.Rectangle(0, 0, t.width, t.height),
+        Phaser.Geom.Rectangle.Contains
+      );
+      t.on("pointerover", () => {
+        const r = scene.add.rectangle(posX, posY, t.width, t.height, 0, 0.2);
+        r.setName("hover");
+      });
+      t.on("pointerout", () => {
+        scene.children.remove(scene.children.getByName("hover"));
+      });
+      platformBlocks.add(t);
     }
   }
 
