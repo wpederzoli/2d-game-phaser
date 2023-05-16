@@ -9,7 +9,12 @@ export default class Platform {
   private sceneRef: GamePlayScene;
   private platformBlocks: Phaser.Physics.Arcade.StaticGroup;
 
-  constructor(scene: GamePlayScene, x: number, y: number, enemy?: boolean) {
+  constructor(
+    scene: GamePlayScene,
+    x: number,
+    y: number,
+    enemy: boolean = false
+  ) {
     this.sceneRef = scene;
     this.platformBlocks = scene.physics.add.staticGroup();
     for (let i = 1; i < PLATFORM_HEIGHT; i++) {
@@ -21,7 +26,7 @@ export default class Platform {
     }
   }
 
-  private createPlatformBlock(x: number, y: number, enemy?: boolean) {
+  private createPlatformBlock(x: number, y: number, enemy: boolean) {
     const block = this.sceneRef.add.sprite(x, y, "wood");
     block.setInteractive(
       new Phaser.Geom.Rectangle(0, 0, block.width, block.height),
@@ -52,7 +57,7 @@ export default class Platform {
       rect.setName("hover");
     });
     block.on("pointerout", () => {
-      this.sceneRef.children.remove(this.sceneRef.children.getByName("hover"));
+      this.sceneRef.children.getByName("hover").destroy();
     });
     block.on("pointerdown", () => {
       if (this.sceneRef.input.activePointer.leftButtonDown()) {
