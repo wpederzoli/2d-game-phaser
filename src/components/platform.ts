@@ -1,56 +1,97 @@
 import * as Phaser from "phaser";
+import GamePlayScene from "../scenes/gameplay";
 
 const PLATFORM_HEIGHT = 6;
 const PLATFORM_WIDTH = 4;
 const WOOD_SPRITE_SIZE = 64;
-const PLATFORM_INITIAL_X = 820;
-const PLATFORM_INITIAL_Y = 300;
 
-export const createPlatforms = (scene: Phaser.Scene) => {
-  const platformBlocks = scene.physics.add.staticGroup();
+export default class Platform {
+  private sceneRef: GamePlayScene;
+  private platformBlocks: Phaser.Physics.Arcade.StaticGroup;
 
-  for (let i = 1; i < PLATFORM_HEIGHT; i++) {
-    const posY = i * WOOD_SPRITE_SIZE + PLATFORM_INITIAL_Y;
-    for (let j = 1; j < PLATFORM_WIDTH; j++) {
-      const posX = j * WOOD_SPRITE_SIZE;
-      platformBlocks.create(posX, posY, "wood");
+  constructor(scene: GamePlayScene, x: number, y: number, enemy?: boolean) {
+    this.sceneRef = scene;
+    this.platformBlocks = scene.physics.add.staticGroup();
+    for (let i = 1; i < PLATFORM_HEIGHT; i++) {
+      const posY = i * WOOD_SPRITE_SIZE + y;
+      for (let j = 1; j < PLATFORM_WIDTH; j++) {
+        const posX = j * WOOD_SPRITE_SIZE + x;
+        this.createPlatformBlock(posX, posY, enemy);
+      }
     }
   }
 
-  for (let i = 1; i < PLATFORM_HEIGHT; i++) {
-    const posY = i * WOOD_SPRITE_SIZE + PLATFORM_INITIAL_Y;
-    for (let j = 1; j < PLATFORM_WIDTH; j++) {
-      const posX = j * WOOD_SPRITE_SIZE + PLATFORM_INITIAL_X;
-      platformBlocks.create(posX, posY, "wood");
-    }
+  private createPlatformBlock(x: number, y: number, enemy?: boolean) {
+    const block = this.sceneRef.add.sprite(x, y, "wood");
+    block.setInteractive(
+      new Phaser.Geom.Rectangle(0, 0, block.width, block.height),
+      Phaser.Geom.Rectangle.Contains
+    );
+
+    !enemy
+      ? this.addPlayerControl(block, x, y)
+      : this.addEnemyControl(block, x, y);
+
+    this.platformBlocks.add(block);
   }
 
-  return platformBlocks;
-};
+  private addPlayerControl = (
+    block: Phaser.GameObjects.Sprite,
+    x: number,
+    y: number
+  ): void => {
+    block.on("pointerover", () => {
+      const rect = this.sceneRef.add.rectangle(
+        x,
+        y,
+        block.width,
+        block.height,
+        0,
+        0.2
+      );
+      rect.setName("hover");
+    });
+    block.on("pointerout", () => {
+      this.sceneRef.children.remove(this.sceneRef.children.getByName("hover"));
+    });
+    block.on("pointerdown", () => {
+      if (this.sceneRef.input.activePointer.leftButtonDown()) {
+        this.sceneRef.pirate.setMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
+      }
+    });
+  };
 
-export const getClickedBlock = (
-  clickPosition: Phaser.Math.Vector2,
-  blocks: Phaser.Physics.Arcade.StaticGroup
-): Phaser.Physics.Arcade.Sprite | null => {
-  let closestBlock: Phaser.Physics.Arcade.Sprite | null = null;
-  let closestDistance: number = Number.MAX_VALUE;
+  private addEnemyControl = (
+    block: Phaser.GameObjects.Sprite,
+    x: number,
+    y: number
+  ): void => {
+    block.on("pointerover", () => {
+      const rect = this.sceneRef.add.rectangle(
+        x,
+        y,
+        block.width,
+        block.height,
+        2231,
+        0.2
+      );
+      rect.setName("hover");
+    });
+    block.on("pointerout", () => {
+      this.sceneRef.children.remove(this.sceneRef.children.getByName("hover"));
+    });
+    block.on("pointerdown", () => {
+      if (this.sceneRef.input.activePointer.rightButtonDown()) {
+        this.sceneRef.cannonball.shootTo(
+          x,
+          y,
+          this.sceneRef.pirate.getPosition()
+        );
+      }
+    });
+  };
 
-  blocks.getChildren().forEach((block) => {
-    const blockBody = block.body as Phaser.Physics.Arcade.StaticBody;
-    const blockPosition = new Phaser.Math.Vector2(
-      blockBody.position.x + blockBody.halfWidth,
-      blockBody.position.y + blockBody.halfHeight
-    );
-    const distance = Phaser.Math.Distance.BetweenPoints(
-      clickPosition,
-      blockPosition
-    );
-
-    if (distance < closestDistance) {
-      closestBlock = block as Phaser.Physics.Arcade.Sprite;
-      closestDistance = distance;
-    }
-  });
-
-  return closestBlock;
-};
+  getBlocks() {
+    return this.platformBlocks;
+  }
+}

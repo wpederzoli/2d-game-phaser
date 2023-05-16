@@ -1,10 +1,11 @@
 import * as Phaser from "phaser";
-import { createPlatforms, getClickedBlock } from "../components/platform";
+import Platform from "../components/platform";
 import Pirate from "../components/pirate";
 import Cannonball from "../components/cannonball";
 
 export default class GamePlayScene extends Phaser.Scene {
-  platformBlocks: Phaser.Physics.Arcade.StaticGroup;
+  platformA: Platform;
+  platformB: Platform;
   pirate: Pirate;
   cannonball: Cannonball;
 
@@ -26,35 +27,13 @@ export default class GamePlayScene extends Phaser.Scene {
     const scale = Math.max(scaleX, scaleY);
     water.setScale(scale).setScrollFactor(0);
 
-    this.platformBlocks = createPlatforms(this);
-    this.pirate = new Pirate(this, 143, 600, "pirate");
-    this.cannonball = new Cannonball(this, this.platformBlocks);
+    this.platformA = new Platform(this, 10, 200);
+    this.platformB = new Platform(this, 800, 200, true);
+    this.pirate = new Pirate(this, 80, 300, "pirate");
+    this.cannonball = new Cannonball(this);
 
+    this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse.disableContextMenu();
-    this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-      if (pointer.rightButtonDown()) {
-        const block = getClickedBlock(pointer.position, this.platformBlocks);
-        if (block) {
-          this.cannonball.shootTo(block.x, block.y, this.pirate.getPosition());
-        }
-      }
-      if (pointer.leftButtonDown()) {
-        this.movePlayer(pointer);
-      }
-    });
-  }
-
-  movePlayer(pointer: Phaser.Input.Pointer) {
-    const closestBlock = getClickedBlock(
-      new Phaser.Math.Vector2(pointer.x, pointer.y),
-      this.platformBlocks
-    );
-
-    if (closestBlock) {
-      const targetX = closestBlock.x + closestBlock.width / 2 - 32;
-      const targetY = closestBlock.y + closestBlock.height / 2 - 38;
-      this.pirate.setMovePosition(targetX, targetY);
-    }
   }
 
   update() {
