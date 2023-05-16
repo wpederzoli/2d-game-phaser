@@ -33,9 +33,7 @@ export default class Platform {
       Phaser.Geom.Rectangle.Contains
     );
 
-    !enemy
-      ? this.addPlayerControl(block, x, y)
-      : this.addEnemyControl(block, x, y);
+    this.addPlayerControl(block, x, y, enemy);
 
     this.platformBlocks.add(block);
   }
@@ -43,7 +41,8 @@ export default class Platform {
   private addPlayerControl = (
     block: Phaser.GameObjects.Sprite,
     x: number,
-    y: number
+    y: number,
+    enemy: boolean
   ): void => {
     block.on("pointerover", () => {
       const rect = this.sceneRef.add.rectangle(
@@ -51,7 +50,7 @@ export default class Platform {
         y,
         block.width,
         block.height,
-        0,
+        !enemy ? 0 : 23252,
         0.2
       );
       rect.setName("hover");
@@ -60,39 +59,17 @@ export default class Platform {
       this.sceneRef.children.getByName("hover").destroy();
     });
     block.on("pointerdown", () => {
-      if (this.sceneRef.input.activePointer.leftButtonDown()) {
+      !enemy &&
+        this.sceneRef.input.activePointer.leftButtonDown() &&
         this.sceneRef.pirate.setMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
-      }
-    });
-  };
 
-  private addEnemyControl = (
-    block: Phaser.GameObjects.Sprite,
-    x: number,
-    y: number
-  ): void => {
-    block.on("pointerover", () => {
-      const rect = this.sceneRef.add.rectangle(
-        x,
-        y,
-        block.width,
-        block.height,
-        2231,
-        0.2
-      );
-      rect.setName("hover");
-    });
-    block.on("pointerout", () => {
-      this.sceneRef.children.remove(this.sceneRef.children.getByName("hover"));
-    });
-    block.on("pointerdown", () => {
-      if (this.sceneRef.input.activePointer.rightButtonDown()) {
+      enemy &&
+        this.sceneRef.input.activePointer.rightButtonDown() &&
         this.sceneRef.cannonball.shootTo(
           x,
           y,
           this.sceneRef.pirate.getPosition()
         );
-      }
     });
   };
 
