@@ -26,9 +26,10 @@ export default class Cannonball {
       onUpdate: () => {
         this.sceneRef.physics.overlap(
           cannonball,
-          this.sceneRef.platformB.getBlocks(),
-          (_, block: Phaser.Physics.Arcade.Sprite) => {
-            if (block.getBounds().contains(targetX, targetY)) {
+          this.sceneRef.platformB?.getBlocks(),
+          (_, block): void => {
+            const b = block as Phaser.Physics.Arcade.Sprite;
+            if (b.getBounds().contains(targetX, targetY)) {
               block.destroy();
             }
           }

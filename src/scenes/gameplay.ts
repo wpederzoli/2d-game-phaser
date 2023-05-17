@@ -2,12 +2,14 @@ import * as Phaser from "phaser";
 import Platform from "../components/platform";
 import Pirate from "../components/pirate";
 import Cannonball from "../components/cannonball";
+import SocketConnector from "../network/socket";
 
 export default class GamePlayScene extends Phaser.Scene {
-  platformA: Platform;
-  platformB: Platform;
-  pirate: Pirate;
-  cannonball: Cannonball;
+  private socketConnection: SocketConnector | undefined;
+  platformA: Platform | undefined;
+  platformB: Platform | undefined;
+  pirate: Pirate | undefined;
+  cannonball: Cannonball | undefined;
 
   constructor() {
     super({ key: "GamePlayScene" });
@@ -27,16 +29,32 @@ export default class GamePlayScene extends Phaser.Scene {
     const scale = Math.max(scaleX, scaleY);
     water.setScale(scale).setScrollFactor(0);
 
+    this.socketConnection = new SocketConnector();
     this.platformA = new Platform(this, 10, 200);
     this.platformB = new Platform(this, 800, 200, true);
     this.pirate = new Pirate(this, 80, 300, "pirate");
     this.cannonball = new Cannonball(this);
 
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
-    this.input.mouse.disableContextMenu();
+    this.input.mouse?.disableContextMenu();
+
+    const inputElement = document.createElement("input");
+    inputElement.type = "text";
+
+    const button = document.createElement("button");
+    button.innerHTML = "Create";
+    button.onclick = () => this.socketConnection.createRoom(inputElement.value);
+
+    const btn = document.createElement("button");
+    btn.innerHTML = "Join";
+    btn.onclick = () => this.socketConnection.joinRoom(inputElement.value);
+
+    Phaser.DOM.AddToDOM(inputElement);
+    Phaser.DOM.AddToDOM(button);
+    Phaser.DOM.AddToDOM(btn);
   }
 
   update() {
-    this.pirate.update();
+    this.pirate?.update();
   }
 }
