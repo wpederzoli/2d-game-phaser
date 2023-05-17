@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
     activeRooms.push({ id: roomId, playerOne: socket.id, playerTwo: "" });
     console.log("roomCreated: ", activeRooms);
     socket.join(roomId);
-    socket.emit("roomCreated", roomId, socket.id);
+    socket.emit("roomCreated", { roomId, userId: socket.id });
   });
 
   socket.on("joinRoom", (roomId) => {
@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("userJoined", socket.id);
     }
 
-    socket.emit("joinedRoom", roomId);
+    socket.emit("joinedRoom", { roomId, userId: socket.id });
     console.log("joining room: ", activeRooms);
   });
 

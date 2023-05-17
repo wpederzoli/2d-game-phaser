@@ -17,6 +17,10 @@ export default class RoomService {
     return this.userId;
   }
 
+  IsHost() {
+    return this.isHost;
+  }
+
   async createRoom(roomId: string): Promise<boolean> {
     const room = await this.socketConnection.createRoom(roomId);
     this.roomId = room.roomId;
@@ -26,8 +30,10 @@ export default class RoomService {
   }
 
   async joinRoom(roomId: string): Promise<boolean> {
-    const id = await this.socketConnection.joinRoom(roomId);
-    this.roomId = id;
+    const room = await this.socketConnection.joinRoom(roomId);
+    console.log("joined room: ", room);
+    this.roomId = room.roomId;
+    this.userId = room.userId;
     return roomId !== "";
   }
 

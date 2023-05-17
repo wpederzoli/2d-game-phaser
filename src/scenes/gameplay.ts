@@ -53,8 +53,8 @@ export default class GamePlayScene extends Phaser.Scene {
     Phaser.DOM.AddToDOM(btn);
   }
 
-  spawnPirate() {
-    this.enemy = new Pirate(this, 880, 300, "pirate");
+  spawnPirate(x: number, y: number) {
+    this.enemy = new Pirate(this, x, y, "pirate");
   }
 
   async spawnPlayerOne(roomId: string) {
@@ -71,10 +71,8 @@ export default class GamePlayScene extends Phaser.Scene {
   }
 
   async spawnPlayerTwo(roomId: string) {
-    console.log("joining");
     try {
       const res = await this.roomService.joinRoom(roomId);
-      console.log("res: ", res);
       if (res) {
         this.platformA = new Platform(this, 800, 200);
         this.platformB = new Platform(this, 10, 200, true);
