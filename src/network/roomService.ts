@@ -46,4 +46,14 @@ export default class RoomService {
       y
     );
   }
+
+  async destroyBlock(x: number, y: number) {
+    console.log("destroy block called");
+    return await this.socketConnection.removeObject(
+      this.roomId,
+      this.userId,
+      x,
+      y
+    );
+  }
 }

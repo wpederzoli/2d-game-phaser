@@ -71,4 +71,34 @@ export default class SocketConnector {
       );
     });
   }
+
+  async removeObject(
+    roomId: string,
+    userId: string,
+    x: number,
+    y: number
+  ): Promise<void> {
+    console.log("remove object called: %s %s", x, y);
+    this.socket.emit("removeObject", roomId, userId, x, y);
+    return new Promise((resolve) => {
+      this.socket.on(
+        "destroyObject",
+        (userId: string, x: number, y: number) => {
+          if (this.sceneRef.roomService.getUserId() !== userId) {
+            console.log("remove element");
+            this.sceneRef.platformA.removeElementAt(x, y);
+          }
+          resolve();
+        }
+      );
+    });
+    // return new Promise (resolve => {
+    //   this.socket.on("destroyObject", (userId: string, objectIndex: number) => {
+    //   if (this.sceneRef.roomService.getUserId() !== userId) {
+    //     console.log("destroy object: ", objectIndex);
+    //     this.sceneRef.children.getAt(objectIndex).destroy();
+    //   }
+    // }
+    // });
+  }
 }

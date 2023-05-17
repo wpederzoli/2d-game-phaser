@@ -49,6 +49,14 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("updatePosition", userId, player);
   });
 
+  socket.on(
+    "removeObject",
+    (roomId: string, userId: string, x: number, y: number) => {
+      console.log("remove object called");
+      io.to(roomId).emit("destroyObject", userId, x, y);
+    }
+  );
+
   socket.on("disconnect", () => {
     console.log("A user disconnected");
     const roomIndex = activeRooms.findIndex(

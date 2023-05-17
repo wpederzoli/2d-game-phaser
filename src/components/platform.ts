@@ -77,4 +77,18 @@ export default class Platform {
   getBlocks() {
     return this.platformBlocks;
   }
+
+  removeElementAt(x: number, y: number) {
+    console.log("looking for x: %s y: %s", x, y);
+    let block: Phaser.GameObjects.GameObject;
+    this.getBlocks()
+      .getChildren()
+      .forEach((b: Phaser.Physics.Arcade.Sprite) => {
+        if (b.x === x && b.y === y) {
+          block = b as Phaser.GameObjects.GameObject;
+        }
+      });
+
+    block && block.destroy();
+  }
 }
