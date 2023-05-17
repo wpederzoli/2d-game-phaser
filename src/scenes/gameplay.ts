@@ -41,6 +41,7 @@ export default class GamePlayScene extends Phaser.Scene {
 
     const button = document.createElement("button");
     button.innerHTML = "Create";
+<<<<<<< HEAD
     button.onclick = () => this.spawnPlayerOne(inputElement.value);
 
     const btn = document.createElement("button");
