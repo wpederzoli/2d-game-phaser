@@ -43,11 +43,11 @@ export default class GamePlayScene extends Phaser.Scene {
 
     const button = document.createElement("button");
     button.innerHTML = "Create";
-    button.onclick = () => console.log("connect to: ", inputElement.value);
+    button.onclick = () => this.socketConnection.createRoom(inputElement.value);
 
     const btn = document.createElement("button");
     btn.innerHTML = "Join";
-    btn.onclick = () => console.log("connect to: ", inputElement.value);
+    btn.onclick = () => this.socketConnection.joinRoom(inputElement.value);
 
     Phaser.DOM.AddToDOM(inputElement);
     Phaser.DOM.AddToDOM(button);

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack --watch & live-server --port=8085",
-    "server": "ts-node server/server.ts"
+    "server": "webpack & ts-node server/server.ts"
   },
   "author": "William Pederzoli",
   "license": "ISC",

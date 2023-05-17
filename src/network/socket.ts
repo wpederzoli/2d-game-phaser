@@ -15,4 +15,12 @@ export default class SocketConnector {
       console.log("Welcome to the server");
     });
   }
+
+  createRoom(roomId: string) {
+    this.socket.emit("createRoom", roomId);
+  }
+
+  joinRoom(roomId: string) {
+    this.socket.emit("joinRoom", roomId);
+  }
 }
