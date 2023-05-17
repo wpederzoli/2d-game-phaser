@@ -1,18 +1,26 @@
 import io, { Socket } from "socket.io-client";
+import GamePlayScene from "../scenes/gameplay";
 
 const URL = "http://localhost:3000";
 
 export default class SocketConnector {
   private socket: Socket;
+  private sceneRef: GamePlayScene;
 
-  constructor() {
+  constructor(scene: GamePlayScene) {
     this.socket = io(URL);
+    this.sceneRef = scene;
     this.setup();
   }
 
   private setup() {
     this.socket.on("connect", () => {
       console.log("Welcome to the server");
+    });
+
+    this.socket.on("userJoined", () => {
+      console.log("user joined");
+      this.sceneRef.spawnPirate();
     });
   }
 

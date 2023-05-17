@@ -9,6 +9,7 @@ export default class GamePlayScene extends Phaser.Scene {
   platformA: Platform;
   platformB: Platform;
   pirate: Pirate;
+  enemy: Pirate;
   cannonball: Cannonball;
 
   constructor() {
@@ -29,7 +30,7 @@ export default class GamePlayScene extends Phaser.Scene {
     const scale = Math.max(scaleX, scaleY);
     water.setScale(scale).setScrollFactor(0);
 
-    this.roomService = new RoomService();
+    this.roomService = new RoomService(this);
 
     this.cannonball = new Cannonball(this);
 
@@ -52,6 +53,10 @@ export default class GamePlayScene extends Phaser.Scene {
     Phaser.DOM.AddToDOM(btn);
   }
 
+  spawnPirate() {
+    this.enemy = new Pirate(this, 880, 300, "pirate");
+  }
+
   async spawnPlayerOne(roomId: string) {
     try {
       const res = await this.roomService.createRoom(roomId);
@@ -66,6 +71,7 @@ export default class GamePlayScene extends Phaser.Scene {
   }
 
   async spawnPlayerTwo(roomId: string) {
+    console.log("joining");
     try {
       const res = await this.roomService.joinRoom(roomId);
       console.log("res: ", res);
@@ -73,6 +79,7 @@ export default class GamePlayScene extends Phaser.Scene {
         this.platformA = new Platform(this, 800, 200);
         this.platformB = new Platform(this, 10, 200, true);
         this.pirate = new Pirate(this, 880, 300, "pirate");
+        this.enemy = new Pirate(this, 80, 300, "pirate");
       }
     } catch (e) {
       console.log("failed to join room: ", e);

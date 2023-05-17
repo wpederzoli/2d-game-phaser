@@ -24,6 +24,7 @@ io.on("connection", (socket) => {
   socket.on("createRoom", (roomId) => {
     activeRooms.push({ id: roomId, playerOne: socket.id, playerTwo: "" });
     console.log("roomCreated: ", activeRooms);
+    socket.join(roomId);
     socket.emit("roomCreated", roomId);
   });
 
@@ -31,6 +32,8 @@ io.on("connection", (socket) => {
     const room = activeRooms.find((room) => room.id === roomId);
     if (room) {
       room.playerTwo = socket.id;
+      socket.join(roomId);
+      io.to(roomId).emit("userJoined", socket.id);
     }
 
     socket.emit("joinedRoom", roomId);
@@ -40,9 +43,9 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("A user disconnected");
     const roomIndex = activeRooms.findIndex(
-      (room) => room.playerOne === socket.id || room.playerTwo === socket.id
+      (room) => room.playerOne === socket.id
     );
-    activeRooms.splice(roomIndex, 1);
+    roomIndex >= 0 && activeRooms.splice(roomIndex, 1);
     console.log("rooms: ", activeRooms);
   });
 });
