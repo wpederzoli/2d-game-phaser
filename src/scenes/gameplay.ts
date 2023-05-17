@@ -37,6 +37,21 @@ export default class GamePlayScene extends Phaser.Scene {
 
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse?.disableContextMenu();
+
+    const inputElement = document.createElement("input");
+    inputElement.type = "text";
+
+    const button = document.createElement("button");
+    button.innerHTML = "Create";
+    button.onclick = () => console.log("connect to: ", inputElement.value);
+
+    const btn = document.createElement("button");
+    btn.innerHTML = "Join";
+    btn.onclick = () => console.log("connect to: ", inputElement.value);
+
+    Phaser.DOM.AddToDOM(inputElement);
+    Phaser.DOM.AddToDOM(button);
+    Phaser.DOM.AddToDOM(btn);
   }
 
   update() {
