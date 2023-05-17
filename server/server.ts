@@ -12,6 +12,11 @@ type Room = {
   playerTwo: string;
 };
 
+type Player = {
+  x: number;
+  y: number;
+};
+
 const activeRooms: Room[] = [];
 
 const io = new Server(server, {
@@ -25,7 +30,7 @@ io.on("connection", (socket) => {
     activeRooms.push({ id: roomId, playerOne: socket.id, playerTwo: "" });
     console.log("roomCreated: ", activeRooms);
     socket.join(roomId);
-    socket.emit("roomCreated", roomId);
+    socket.emit("roomCreated", roomId, socket.id);
   });
 
   socket.on("joinRoom", (roomId) => {
@@ -38,6 +43,10 @@ io.on("connection", (socket) => {
 
     socket.emit("joinedRoom", roomId);
     console.log("joining room: ", activeRooms);
+  });
+
+  socket.on("movePlayer", (roomId: string, userId: string, player: Player) => {
+    io.to(roomId).emit("updatePosition", userId, player);
   });
 
   socket.on("disconnect", () => {

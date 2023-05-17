@@ -58,10 +58,11 @@ export default class Platform {
     block.on("pointerout", () => {
       this.sceneRef.children.getByName("hover")?.destroy();
     });
-    block.on("pointerdown", () => {
-      !enemy &&
-        this.sceneRef.input.activePointer.leftButtonDown() &&
+    block.on("pointerdown", async () => {
+      if (!enemy && this.sceneRef.input.activePointer.leftButtonDown()) {
         this.sceneRef.pirate?.setMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
+        this.sceneRef.roomService.sendMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
+      }
 
       enemy &&
         this.sceneRef.input.activePointer.rightButtonDown() &&

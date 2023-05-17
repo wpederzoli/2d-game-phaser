@@ -88,5 +88,6 @@ export default class GamePlayScene extends Phaser.Scene {
 
   update() {
     this.pirate?.update();
+    this.enemy?.update();
   }
 }
