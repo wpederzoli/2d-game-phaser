@@ -2,8 +2,10 @@ import * as Phaser from "phaser";
 import Platform from "../components/platform";
 import Pirate from "../components/pirate";
 import Cannonball from "../components/cannonball";
+import RoomService from "../network/roomService";
 
 export default class GamePlayScene extends Phaser.Scene {
+  roomService: RoomService;
   platformA: Platform;
   platformB: Platform;
   pirate: Pirate;
@@ -27,16 +29,57 @@ export default class GamePlayScene extends Phaser.Scene {
     const scale = Math.max(scaleX, scaleY);
     water.setScale(scale).setScrollFactor(0);
 
-    this.platformA = new Platform(this, 10, 200);
-    this.platformB = new Platform(this, 800, 200, true);
-    this.pirate = new Pirate(this, 80, 300, "pirate");
+    this.roomService = new RoomService();
+
     this.cannonball = new Cannonball(this);
 
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
-    this.input.mouse.disableContextMenu();
+    this.input.mouse?.disableContextMenu();
+
+    const inputElement = document.createElement("input");
+    inputElement.type = "text";
+
+    const button = document.createElement("button");
+    button.innerHTML = "Create";
+    button.onclick = () => this.spawnPlayerOne(inputElement.value);
+
+    const btn = document.createElement("button");
+    btn.innerHTML = "Join";
+    btn.onclick = () => this.spawnPlayerTwo(inputElement.value);
+
+    Phaser.DOM.AddToDOM(inputElement);
+    Phaser.DOM.AddToDOM(button);
+    Phaser.DOM.AddToDOM(btn);
+  }
+
+  async spawnPlayerOne(roomId: string) {
+    try {
+      const res = await this.roomService.createRoom(roomId);
+      if (res) {
+        this.platformA = new Platform(this, 10, 200);
+        this.platformB = new Platform(this, 800, 200, true);
+        this.pirate = new Pirate(this, 80, 300, "pirate");
+      }
+    } catch (e) {
+      console.log("error creating room: ", e);
+    }
+  }
+
+  async spawnPlayerTwo(roomId: string) {
+    try {
+      const res = await this.roomService.joinRoom(roomId);
+      console.log("res: ", res);
+      if (res) {
+        this.platformA = new Platform(this, 800, 200);
+        this.platformB = new Platform(this, 10, 200, true);
+        this.pirate = new Pirate(this, 880, 300, "pirate");
+      }
+    } catch (e) {
+      console.log("failed to join room: ", e);
+    }
   }
 
   update() {
-    this.pirate.update();
+    this.pirate?.update();
   }
 }

@@ -3,13 +3,12 @@ import * as Phaser from "phaser";
 export default class Pirate {
   private sprite: Phaser.Physics.Arcade.Sprite;
   private sceneRef: Phaser.Scene;
-  movePosition: Phaser.Math.Vector2 | null;
+  movePosition: Phaser.Math.Vector2 | undefined;
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
     this.sceneRef = scene;
     this.sprite = scene.physics.add.sprite(x, y, texture);
     this.sprite.setCollideWorldBounds(true);
-    this.sprite.setGravity(0);
   }
 
   setMovePosition(x: number, y: number) {
@@ -17,7 +16,7 @@ export default class Pirate {
   }
 
   getPosition() {
-    return this.sprite.body.position;
+    return this.sprite.body?.position;
   }
 
   update(): void {
@@ -32,7 +31,7 @@ export default class Pirate {
 
       if (distance < 5) {
         this.sprite.setVelocity(0);
-        this.movePosition = null;
+        this.movePosition = undefined;
       } else {
         this.sceneRef.physics.moveTo(this.sprite, targetX, targetY, 100);
       }
