@@ -16,7 +16,7 @@ export default class Pirate {
   }
 
   getPosition() {
-    return this.sprite.body?.position;
+    return this.sprite.body.position;
   }
 
   update(): void {

@@ -37,23 +37,11 @@ export default class RoomService {
     return roomId !== "";
   }
 
-  async sendMovePosition(x: number, y: number) {
-    console.log("sending move position %s %s", x, y);
-    return await this.socketConnection.sendMovePosition(
-      this.roomId,
-      this.userId,
-      x,
-      y
-    );
+  sendMovePosition(x: number, y: number) {
+    this.socketConnection.sendMovePosition(this.roomId, this.userId, x, y);
   }
 
-  async destroyBlock(x: number, y: number) {
-    console.log("destroy block called");
-    return await this.socketConnection.removeObject(
-      this.roomId,
-      this.userId,
-      x,
-      y
-    );
+  destroyBlock(x: number, y: number) {
+    this.socketConnection.removeObject(this.roomId, this.userId, x, y);
   }
 }

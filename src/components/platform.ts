@@ -69,7 +69,7 @@ export default class Platform {
         this.sceneRef.cannonball?.shootTo(
           x,
           y,
-          this.sceneRef.pirate?.getPosition() as Phaser.Math.Vector2
+          this.sceneRef.pirate?.getPosition()
         );
     });
   };
