@@ -41,7 +41,10 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("userJoined", socket.id);
     }
 
-    socket.emit("joinedRoom", { roomId, userId: socket.id });
+    socket.emit("joinedRoom", {
+      roomId: room ? room?.id : "",
+      userId: socket.id,
+    });
     console.log("joining room: ", activeRooms);
   });
 
