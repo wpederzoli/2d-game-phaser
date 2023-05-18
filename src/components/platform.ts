@@ -79,7 +79,6 @@ export default class Platform {
   }
 
   removeElementAt(x: number, y: number) {
-    console.log("looking for x: %s y: %s", x, y);
     let block: Phaser.GameObjects.GameObject;
     this.getBlocks()
       .getChildren()

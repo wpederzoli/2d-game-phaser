@@ -21,7 +21,6 @@ export default class Cannonball {
       y: targetY,
       duration: 1000,
       onComplete: () => {
-        console.log("cannonball: ", cannonball);
         cannonball.destroy();
       },
       onUpdate: () => {
@@ -31,8 +30,7 @@ export default class Cannonball {
           async (_, block): Promise<void> => {
             const b = block as Phaser.Physics.Arcade.Sprite;
             if (b.getBounds().contains(targetX, targetY)) {
-              console.log("this is calling room service");
-              await this.sceneRef.roomService.destroyBlock(b.x, b.y);
+              this.sceneRef.roomService.destroyBlock(b.x, b.y);
               block.destroy();
             }
           }

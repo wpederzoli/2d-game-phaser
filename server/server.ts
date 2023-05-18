@@ -52,7 +52,6 @@ io.on("connection", (socket) => {
   socket.on(
     "removeObject",
     (roomId: string, userId: string, x: number, y: number) => {
-      console.log("remove object called");
       io.to(roomId).emit("destroyObject", userId, x, y);
     }
   );
