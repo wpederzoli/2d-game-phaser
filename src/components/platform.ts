@@ -64,13 +64,18 @@ export default class Platform {
         this.sceneRef.roomService.sendMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
       }
 
-      enemy &&
-        this.sceneRef.input.activePointer.rightButtonDown() &&
+      if (enemy && this.sceneRef.input.activePointer.rightButtonDown()) {
         this.sceneRef.cannonball?.shootTo(
           x,
           y,
           this.sceneRef.pirate?.getPosition()
         );
+        this.sceneRef.roomService.sendShootPosition(
+          x,
+          y,
+          this.sceneRef.pirate.getPosition()
+        );
+      }
     });
   };
 

@@ -49,6 +49,10 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("updatePosition", userId, player);
   });
 
+  socket.on("shootTarget", (roomId: string, userId: string, coords: any) => {
+    io.to(roomId).emit("shootCannon", userId, coords);
+  });
+
   socket.on(
     "removeObject",
     (roomId: string, userId: string, x: number, y: number) => {

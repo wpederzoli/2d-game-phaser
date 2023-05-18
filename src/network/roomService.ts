@@ -41,6 +41,13 @@ export default class RoomService {
     this.socketConnection.sendMovePosition(this.roomId, this.userId, x, y);
   }
 
+  sendShootPosition(x: number, y: number, origin: { x: number; y: number }) {
+    this.socketConnection.sendShootPosition(this.roomId, this.userId, {
+      target: { x, y },
+      origin,
+    });
+  }
+
   destroyBlock(x: number, y: number) {
     this.socketConnection.removeObject(this.roomId, this.userId, x, y);
   }

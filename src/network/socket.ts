@@ -37,6 +37,16 @@ export default class SocketConnector {
         this.sceneRef.platformA.removeElementAt(x, y);
       }
     });
+
+    this.socket.on("shootCannon", (userId: string, coords: any) => {
+      if (this.sceneRef.roomService.getUserId() !== userId) {
+        this.sceneRef.cannonball.shootTo(
+          coords.target.x,
+          coords.target.y,
+          coords.origin
+        );
+      }
+    });
   }
 
   async createRoom(roomId: string): Promise<RoomCreationResponse> {
@@ -63,6 +73,17 @@ export default class SocketConnector {
 
   sendMovePosition(roomId: string, userId: string, x: number, y: number) {
     this.socket.emit("movePlayer", roomId, userId, { x, y });
+  }
+
+  sendShootPosition(
+    roomId: string,
+    userId: string,
+    coords: {
+      target: { x: number; y: number };
+      origin: { x: number; y: number };
+    }
+  ) {
+    this.socket.emit("shootTarget", roomId, userId, coords);
   }
 
   removeObject(roomId: string, userId: string, x: number, y: number) {
