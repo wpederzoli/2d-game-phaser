@@ -27,9 +27,10 @@ export default class Cannonball {
         this.sceneRef.physics.overlap(
           cannonball,
           this.sceneRef.platformB?.getBlocks(),
-          (_, block): void => {
+          async (_, block): Promise<void> => {
             const b = block as Phaser.Physics.Arcade.Sprite;
             if (b.getBounds().contains(targetX, targetY)) {
+              this.sceneRef.roomService.destroyBlock(b.x, b.y);
               block.destroy();
             }
           }

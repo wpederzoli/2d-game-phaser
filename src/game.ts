@@ -11,6 +11,9 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
+  fps: {
+    min: 30,
+  },
   scene: [GamePlayScene],
 };
 

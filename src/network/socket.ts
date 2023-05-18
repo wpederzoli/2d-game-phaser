@@ -1,12 +1,20 @@
 import io, { Socket } from "socket.io-client";
+import GamePlayScene from "../scenes/gameplay";
 
 const URL = "http://localhost:3000";
 
+type RoomCreationResponse = {
+  roomId: string;
+  userId: string;
+};
+
 export default class SocketConnector {
   private socket: Socket;
+  private sceneRef: GamePlayScene;
 
-  constructor() {
+  constructor(scene: GamePlayScene) {
     this.socket = io(URL);
+    this.sceneRef = scene;
     this.setup();
   }
 
@@ -14,13 +22,71 @@ export default class SocketConnector {
     this.socket.on("connect", () => {
       console.log("Welcome to the server");
     });
+
+    this.socket.on(
+      "updatePosition",
+      (userId: string, position: { x: number; y: number }) => {
+        if (this.sceneRef.roomService.getUserId() !== userId) {
+          this.sceneRef.enemy.setMovePosition(position.x, position.y);
+        }
+      }
+    );
+
+    this.socket.on("destroyObject", (userId: string, x: number, y: number) => {
+      if (this.sceneRef.roomService.getUserId() !== userId) {
+        this.sceneRef.platformA.removeElementAt(x, y);
+      }
+    });
+
+    this.socket.on("shootCannon", (userId: string, coords: any) => {
+      if (this.sceneRef.roomService.getUserId() !== userId) {
+        this.sceneRef.cannonball.shootTo(
+          coords.target.x,
+          coords.target.y,
+          coords.origin
+        );
+      }
+    });
   }
 
-  createRoom(roomId: string) {
+  async createRoom(roomId: string): Promise<RoomCreationResponse> {
     this.socket.emit("createRoom", roomId);
+
+    this.socket.on("userJoined", () => {
+      this.sceneRef.spawnPirate(880, 300);
+    });
+    return new Promise((resolve) => {
+      this.socket.on("roomCreated", (roomInfo: RoomCreationResponse) => {
+        resolve(roomInfo);
+      });
+    });
   }
 
-  joinRoom(roomId: string) {
+  async joinRoom(roomId: string): Promise<RoomCreationResponse> {
     this.socket.emit("joinRoom", roomId);
+    return new Promise((resolve) => {
+      this.socket.on("joinedRoom", (roomInfo: RoomCreationResponse) => {
+        resolve(roomInfo);
+      });
+    });
+  }
+
+  sendMovePosition(roomId: string, userId: string, x: number, y: number) {
+    this.socket.emit("movePlayer", roomId, userId, { x, y });
+  }
+
+  sendShootPosition(
+    roomId: string,
+    userId: string,
+    coords: {
+      target: { x: number; y: number };
+      origin: { x: number; y: number };
+    }
+  ) {
+    this.socket.emit("shootTarget", roomId, userId, coords);
+  }
+
+  removeObject(roomId: string, userId: string, x: number, y: number) {
+    this.socket.emit("removeObject", roomId, userId, x, y);
   }
 }

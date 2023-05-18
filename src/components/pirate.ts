@@ -9,7 +9,6 @@ export default class Pirate {
     this.sceneRef = scene;
     this.sprite = scene.physics.add.sprite(x, y, texture);
     this.sprite.setCollideWorldBounds(true);
-    this.sprite.setGravity(0);
   }
 
   setMovePosition(x: number, y: number) {
@@ -17,7 +16,7 @@ export default class Pirate {
   }
 
   getPosition() {
-    return this.sprite.body?.position;
+    return this.sprite.body.position;
   }
 
   update(): void {

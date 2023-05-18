@@ -58,22 +58,41 @@ export default class Platform {
     block.on("pointerout", () => {
       this.sceneRef.children.getByName("hover")?.destroy();
     });
-    block.on("pointerdown", () => {
-      !enemy &&
-        this.sceneRef.input.activePointer.leftButtonDown() &&
+    block.on("pointerdown", async () => {
+      if (!enemy && this.sceneRef.input.activePointer.leftButtonDown()) {
         this.sceneRef.pirate?.setMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
+        this.sceneRef.roomService.sendMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
+      }
 
-      enemy &&
-        this.sceneRef.input.activePointer.rightButtonDown() &&
+      if (enemy && this.sceneRef.input.activePointer.rightButtonDown()) {
         this.sceneRef.cannonball?.shootTo(
           x,
           y,
-          this.sceneRef.pirate?.getPosition() as Phaser.Math.Vector2
+          this.sceneRef.pirate?.getPosition()
         );
+        this.sceneRef.roomService.sendShootPosition(
+          x,
+          y,
+          this.sceneRef.pirate.getPosition()
+        );
+      }
     });
   };
 
   getBlocks() {
     return this.platformBlocks;
+  }
+
+  removeElementAt(x: number, y: number) {
+    let block: Phaser.GameObjects.GameObject;
+    this.getBlocks()
+      .getChildren()
+      .forEach((b: Phaser.Physics.Arcade.Sprite) => {
+        if (b.x === x && b.y === y) {
+          block = b as Phaser.GameObjects.GameObject;
+        }
+      });
+
+    block && block.destroy();
   }
 }
