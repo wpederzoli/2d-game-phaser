@@ -1,7 +1,6 @@
 import * as Phaser from "phaser";
 import Platform from "../components/platform";
 import Pirate from "../components/pirate";
-import Cannonball from "../components/cannonball";
 import RoomService from "../network/roomService";
 
 export default class GamePlayScene extends Phaser.Scene {
@@ -10,7 +9,6 @@ export default class GamePlayScene extends Phaser.Scene {
   platformB: Platform;
   pirate: Pirate;
   enemy: Pirate;
-  cannonball: Cannonball;
 
   constructor() {
     super({ key: "GamePlayScene" });
@@ -32,8 +30,6 @@ export default class GamePlayScene extends Phaser.Scene {
 
     this.roomService = new RoomService(this);
 
-    this.cannonball = new Cannonball(this);
-
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse?.disableContextMenu();
 
@@ -48,13 +44,27 @@ export default class GamePlayScene extends Phaser.Scene {
     btn.innerHTML = "Join";
     btn.onclick = () => this.spawnPlayerTwo(inputElement.value);
 
+    const btn2 = document.createElement("button");
+    btn2.innerHTML = "Play";
+    btn2.onclick = () => this.roomService.startTurn();
+
+    const countText = document.createElement("div");
+    countText.id = "countText";
+    countText.innerHTML = "3";
+
     Phaser.DOM.AddToDOM(inputElement);
     Phaser.DOM.AddToDOM(button);
     Phaser.DOM.AddToDOM(btn);
+    Phaser.DOM.AddToDOM(btn2);
+    Phaser.DOM.AddToDOM(countText);
+  }
+
+  updateCountDown(count: number) {
+    document.getElementById("countText").innerHTML = count.toString();
   }
 
   spawnPirate(x: number, y: number) {
-    this.enemy = new Pirate(this, x, y, "pirate");
+    this.enemy = new Pirate(this, x, y, "pirate", true);
   }
 
   async spawnPlayerOne(roomId: string) {
@@ -77,7 +87,7 @@ export default class GamePlayScene extends Phaser.Scene {
         this.platformA = new Platform(this, 800, 200);
         this.platformB = new Platform(this, 10, 200, true);
         this.pirate = new Pirate(this, 880, 300, "pirate");
-        this.enemy = new Pirate(this, 80, 300, "pirate");
+        this.enemy = new Pirate(this, 80, 300, "pirate", true);
       }
     } catch (e) {
       console.log("failed to join room: ", e);

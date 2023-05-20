@@ -31,8 +31,6 @@ export default class RoomService {
 
   async joinRoom(roomId: string): Promise<boolean> {
     const room = await this.socketConnection.joinRoom(roomId);
-    console.log("this is room: ", room);
-    console.log("joined room: ", room);
     this.roomId = room.roomId;
     this.userId = room.userId;
     return room.roomId !== "";
@@ -42,11 +40,20 @@ export default class RoomService {
     this.socketConnection.sendMovePosition(this.roomId, this.userId, x, y);
   }
 
-  sendShootPosition(x: number, y: number, origin: { x: number; y: number }) {
-    this.socketConnection.sendShootPosition(this.roomId, this.userId, {
-      target: { x, y },
-      origin,
-    });
+  sendShootPosition(target: Phaser.Math.Vector2) {
+    this.socketConnection.sendShootPosition(this.roomId, this.userId, target);
+  }
+
+  readyToShoot() {
+    this.socketConnection.sendReadyToShoot(this.roomId, this.userId);
+  }
+
+  sendPlayerMove(move: boolean) {
+    this.socketConnection.sendPlayerCanMove(this.roomId, this.userId, move);
+  }
+
+  startTurn() {
+    this.socketConnection.startCount(this.roomId);
   }
 
   destroyBlock(x: number, y: number) {

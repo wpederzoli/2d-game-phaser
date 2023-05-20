@@ -32,20 +32,39 @@ export default class SocketConnector {
       }
     );
 
+    this.socket.on("readyToMove", (userId: string, canMove: boolean) => {
+      if (this.sceneRef.roomService.getUserId() !== userId) {
+        this.sceneRef.enemy.setCanMove(canMove);
+      }
+    });
+
     this.socket.on("destroyObject", (userId: string, x: number, y: number) => {
       if (this.sceneRef.roomService.getUserId() !== userId) {
         this.sceneRef.platformA.removeElementAt(x, y);
       }
     });
 
-    this.socket.on("shootCannon", (userId: string, coords: any) => {
-      if (this.sceneRef.roomService.getUserId() !== userId) {
-        this.sceneRef.cannonball.shootTo(
-          coords.target.x,
-          coords.target.y,
-          coords.origin
-        );
+    this.socket.on("count", (count: number) => {
+      this.sceneRef.updateCountDown(count);
+    });
+
+    this.socket.on("playTurn", () => {
+      this.sceneRef.pirate.setCanMove(true);
+      this.sceneRef.enemy.setCanMove(true);
+    });
+
+    this.socket.on(
+      "setShootPosition",
+      (userId: string, target: Phaser.Math.Vector2) => {
+        if (this.sceneRef.roomService.getUserId() !== userId) {
+          this.sceneRef.enemy.setTargetPosition(target);
+        }
       }
+    );
+
+    this.socket.on("shoot", () => {
+      this.sceneRef.pirate.shoot();
+      this.sceneRef.enemy.shoot();
     });
   }
 
@@ -75,15 +94,32 @@ export default class SocketConnector {
     this.socket.emit("movePlayer", roomId, userId, { x, y });
   }
 
+  sendPlayerCanMove(roomId: string, userId: string, canMove: boolean) {
+    this.socket.emit("playerCanMove", roomId, userId, canMove);
+  }
+
+  startCount(roomId: string) {
+    this.socket.emit("startCount", roomId);
+  }
+
   sendShootPosition(
     roomId: string,
     userId: string,
-    coords: {
-      target: { x: number; y: number };
-      origin: { x: number; y: number };
-    }
+    target: Phaser.Math.Vector2
   ) {
-    this.socket.emit("shootTarget", roomId, userId, coords);
+    this.socket.emit("shootTarget", roomId, userId, target);
+  }
+
+  sendReadyToShoot(roomId: string, userId: string) {
+    this.socket.emit("readyToShoot", roomId, userId);
+  }
+
+  sendTriggerCannon(
+    roomId: string,
+    userId: string,
+    origin: Phaser.Math.Vector2
+  ) {
+    this.socket.emit("triggerCannon", roomId, userId, origin);
   }
 
   removeObject(roomId: string, userId: string, x: number, y: number) {

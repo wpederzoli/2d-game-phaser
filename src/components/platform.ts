@@ -65,16 +65,9 @@ export default class Platform {
       }
 
       if (enemy && this.sceneRef.input.activePointer.rightButtonDown()) {
-        this.sceneRef.cannonball?.shootTo(
-          x,
-          y,
-          this.sceneRef.pirate?.getPosition()
-        );
-        this.sceneRef.roomService.sendShootPosition(
-          x,
-          y,
-          this.sceneRef.pirate.getPosition()
-        );
+        const newPos = new Phaser.Math.Vector2(x, y);
+        this.sceneRef.pirate.setTargetPosition(newPos);
+        this.sceneRef.roomService.sendShootPosition(newPos);
       }
     });
   };
