@@ -1,4 +1,5 @@
 import io, { Socket } from "socket.io-client";
+import { WOOD_SPRITE_SIZE } from "../components/platform";
 import GamePlayScene from "../scenes/gameplay";
 
 const URL = "http://localhost:3000";
@@ -78,7 +79,7 @@ export default class SocketConnector {
     this.socket.emit("createRoom", roomId);
 
     this.socket.on("userJoined", () => {
-      this.sceneRef.spawnPirate(880, 300);
+      this.sceneRef.spawnPirate(WOOD_SPRITE_SIZE * 16, WOOD_SPRITE_SIZE * 3.5); //Removing half the size of a sprite to center it on square
     });
     return new Promise((resolve) => {
       this.socket.on("roomCreated", (roomInfo: RoomCreationResponse) => {

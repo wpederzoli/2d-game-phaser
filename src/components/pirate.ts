@@ -190,7 +190,9 @@ export default class Pirate {
   }
 
   isValidNeighbor(pos: Phaser.Math.Vector2) {
-    const blocks = this.sceneRef.platformA.getBlocks().getChildren();
+    const blocks = this.isEnemy
+      ? this.sceneRef.platformB.getBlocks().getChildren()
+      : this.sceneRef.platformA.getBlocks().getChildren();
 
     const block = blocks.find((b: Phaser.Physics.Arcade.Sprite) => {
       return b.x === pos.x && b.y === pos.y;
