@@ -59,12 +59,9 @@ io.on("connection", (socket) => {
     }
   );
 
-  socket.on(
-    "triggerCannon",
-    (roomId: string, userId: string, origin: { x: number; y: number }) => {
-      io.to(roomId).emit("shoot", userId, origin);
-    }
-  );
+  socket.on("triggerCannon", (roomId: string, userId: string) => {
+    io.to(roomId).emit("shoot", userId);
+  });
 
   socket.on(
     "playerCanMove",

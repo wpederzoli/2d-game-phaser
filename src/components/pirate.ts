@@ -54,7 +54,6 @@ export default class Pirate {
         this.movePosition = undefined;
         this.setCanMove(false);
         const origin = new Phaser.Math.Vector2(this.sprite.x, this.sprite.y);
-        this.sceneRef.roomService.sendTriggerCannon(origin);
         this.cannonball.shoot(origin);
       } else {
         this.canMove &&

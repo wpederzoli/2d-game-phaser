@@ -62,8 +62,9 @@ export default class SocketConnector {
       }
     );
 
-    this.socket.on("shoot", (userId: string, origin: Phaser.Math.Vector2) => {
+    this.socket.on("shoot", (userId: string) => {
       if (this.sceneRef.roomService.getUserId() !== userId) {
+        console.log("enemy shoot");
         this.sceneRef.enemy.shoot();
       }
     });
