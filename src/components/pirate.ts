@@ -82,7 +82,6 @@ export default class Pirate {
       if (this.isDestination(current.position)) {
         console.log("is destination");
         this.path = this.reconstructPath(current);
-        //this.moveAllongPath(path);
         frontiers.splice(0, frontiers.length);
         return;
       }
@@ -248,10 +247,10 @@ export default class Pirate {
         this.sprite.x,
         this.sprite.y,
         targetX,
-        targetY
+        targetY - WOOD_SPRITE_SIZE / 2
       );
 
-      if (distance < 2) {
+      if (distance < 5) {
         this.path.splice(0, 1);
         if (this.path.length === 0) {
           this.sprite.setVelocity(0);
@@ -264,7 +263,12 @@ export default class Pirate {
         this.sprite.body.reset(targetX, targetY - WOOD_SPRITE_SIZE / 2);
       } else {
         this.canMove &&
-          this.sceneRef.physics.moveTo(this.sprite, targetX, targetY, 100);
+          this.sceneRef.physics.moveTo(
+            this.sprite,
+            targetX,
+            targetY - WOOD_SPRITE_SIZE / 2,
+            100
+          );
       }
     }
   }
