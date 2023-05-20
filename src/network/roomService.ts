@@ -46,8 +46,8 @@ export default class RoomService {
     this.socketConnection.sendShootPosition(this.roomId, this.userId, target);
   }
 
-  sendTriggerCannon(origin: Phaser.Math.Vector2) {
-    this.socketConnection.sendTriggerCannon(this.roomId, this.userId, origin);
+  readyToShoot() {
+    this.socketConnection.sendReadyToShoot(this.roomId, this.userId);
   }
 
   sendPlayerMove(move: boolean) {

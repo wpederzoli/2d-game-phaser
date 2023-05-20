@@ -5,16 +5,24 @@ import Cannonball from "./cannonball";
 export default class Pirate {
   private sprite: Phaser.Physics.Arcade.Sprite;
   private sceneRef: GamePlayScene;
+  private isEnemy: boolean;
   private canMove: boolean;
   private cannonball: Cannonball;
   movePosition: Phaser.Math.Vector2 | undefined;
 
-  constructor(scene: GamePlayScene, x: number, y: number, texture: string) {
+  constructor(
+    scene: GamePlayScene,
+    x: number,
+    y: number,
+    texture: string,
+    isEnemy?: boolean
+  ) {
     this.sceneRef = scene;
     this.sprite = scene.physics.add.sprite(x, y, texture);
     this.sprite.setCollideWorldBounds(true);
     this.cannonball = new Cannonball(this.sceneRef);
     this.canMove = false;
+    this.isEnemy = isEnemy || false;
   }
 
   setMovePosition(x: number, y: number) {
@@ -53,8 +61,9 @@ export default class Pirate {
         this.sprite.setVelocity(0);
         this.movePosition = undefined;
         this.setCanMove(false);
-        const origin = new Phaser.Math.Vector2(this.sprite.x, this.sprite.y);
-        this.cannonball.shoot(origin);
+        if (!this.isEnemy) {
+          this.sceneRef.roomService.readyToShoot();
+        }
       } else {
         this.canMove &&
           this.sceneRef.physics.moveTo(this.sprite, targetX, targetY, 100);
