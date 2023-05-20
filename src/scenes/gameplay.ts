@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import Platform from "../components/platform";
+import Platform, { WOOD_SPRITE_SIZE } from "../components/platform";
 import Pirate from "../components/pirate";
 import RoomService from "../network/roomService";
 
@@ -71,9 +71,19 @@ export default class GamePlayScene extends Phaser.Scene {
     try {
       const res = await this.roomService.createRoom(roomId);
       if (res) {
-        this.platformA = new Platform(this, 10, 200);
-        this.platformB = new Platform(this, 800, 200, true);
-        this.pirate = new Pirate(this, 80, 300, "pirate");
+        this.platformA = new Platform(this, 0, WOOD_SPRITE_SIZE * 3);
+        this.platformB = new Platform(
+          this,
+          WOOD_SPRITE_SIZE * 13,
+          WOOD_SPRITE_SIZE * 3,
+          true
+        );
+        this.pirate = new Pirate(
+          this,
+          WOOD_SPRITE_SIZE,
+          WOOD_SPRITE_SIZE * 3 + WOOD_SPRITE_SIZE / 2,
+          "pirate"
+        );
       }
     } catch (e) {
       console.log("error creating room: ", e);
@@ -84,10 +94,25 @@ export default class GamePlayScene extends Phaser.Scene {
     try {
       const res = await this.roomService.joinRoom(roomId);
       if (res) {
-        this.platformA = new Platform(this, 800, 200);
-        this.platformB = new Platform(this, 10, 200, true);
-        this.pirate = new Pirate(this, 880, 300, "pirate");
-        this.enemy = new Pirate(this, 80, 300, "pirate", true);
+        this.platformA = new Platform(
+          this,
+          WOOD_SPRITE_SIZE * 13,
+          WOOD_SPRITE_SIZE * 3
+        );
+        this.platformB = new Platform(this, 0, WOOD_SPRITE_SIZE * 3, true);
+        this.pirate = new Pirate(
+          this,
+          WOOD_SPRITE_SIZE * 16,
+          WOOD_SPRITE_SIZE * 3.5,
+          "pirate"
+        );
+        this.enemy = new Pirate(
+          this,
+          WOOD_SPRITE_SIZE,
+          WOOD_SPRITE_SIZE * 3.5,
+          "pirate",
+          true
+        );
       }
     } catch (e) {
       console.log("failed to join room: ", e);
