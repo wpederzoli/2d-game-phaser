@@ -1,7 +1,6 @@
 import * as Phaser from "phaser";
 import Platform from "../components/platform";
 import Pirate from "../components/pirate";
-import Cannonball from "../components/cannonball";
 import RoomService from "../network/roomService";
 
 export default class GamePlayScene extends Phaser.Scene {
@@ -10,7 +9,6 @@ export default class GamePlayScene extends Phaser.Scene {
   platformB: Platform;
   pirate: Pirate;
   enemy: Pirate;
-  cannonball: Cannonball;
 
   constructor() {
     super({ key: "GamePlayScene" });
@@ -32,8 +30,6 @@ export default class GamePlayScene extends Phaser.Scene {
 
     this.roomService = new RoomService(this);
 
-    this.cannonball = new Cannonball(this);
-
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse?.disableContextMenu();
 
@@ -54,7 +50,7 @@ export default class GamePlayScene extends Phaser.Scene {
 
     const countText = document.createElement("div");
     countText.id = "countText";
-    countText.innerHTML = "10";
+    countText.innerHTML = "3";
 
     Phaser.DOM.AddToDOM(inputElement);
     Phaser.DOM.AddToDOM(button);

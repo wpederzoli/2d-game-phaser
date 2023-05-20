@@ -53,13 +53,18 @@ export default class SocketConnector {
       this.sceneRef.enemy.setCanMove(true);
     });
 
-    this.socket.on("shootCannon", (userId: string, coords: any) => {
+    this.socket.on(
+      "setShootPosition",
+      (userId: string, target: Phaser.Math.Vector2) => {
+        if (this.sceneRef.roomService.getUserId() !== userId) {
+          this.sceneRef.enemy.setTargetPosition(target);
+        }
+      }
+    );
+
+    this.socket.on("shoot", (userId: string, origin: Phaser.Math.Vector2) => {
       if (this.sceneRef.roomService.getUserId() !== userId) {
-        this.sceneRef.cannonball.shootTo(
-          coords.target.x,
-          coords.target.y,
-          coords.origin
-        );
+        this.sceneRef.enemy.shoot();
       }
     });
   }
@@ -101,12 +106,17 @@ export default class SocketConnector {
   sendShootPosition(
     roomId: string,
     userId: string,
-    coords: {
-      target: { x: number; y: number };
-      origin: { x: number; y: number };
-    }
+    target: Phaser.Math.Vector2
   ) {
-    this.socket.emit("shootTarget", roomId, userId, coords);
+    this.socket.emit("shootTarget", roomId, userId, target);
+  }
+
+  sendTriggerCannon(
+    roomId: string,
+    userId: string,
+    origin: Phaser.Math.Vector2
+  ) {
+    this.socket.emit("triggerCannon", roomId, userId, origin);
   }
 
   removeObject(roomId: string, userId: string, x: number, y: number) {

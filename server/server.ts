@@ -52,9 +52,19 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("updatePosition", userId, player);
   });
 
-  socket.on("shootTarget", (roomId: string, userId: string, coords: any) => {
-    io.to(roomId).emit("shootCannon", userId, coords);
-  });
+  socket.on(
+    "shootTarget",
+    (roomId: string, userId: string, target: { x: number; y: number }) => {
+      io.to(roomId).emit("setShootPosition", userId, target);
+    }
+  );
+
+  socket.on(
+    "triggerCannon",
+    (roomId: string, userId: string, origin: { x: number; y: number }) => {
+      io.to(roomId).emit("shoot", userId, origin);
+    }
+  );
 
   socket.on(
     "playerCanMove",
@@ -64,7 +74,7 @@ io.on("connection", (socket) => {
   );
 
   socket.on("startCount", (roomId: string) => {
-    let count = 10;
+    let count = 3;
     let countDownInterval = setInterval(() => {
       io.to(roomId).emit("count", count);
       count--;
