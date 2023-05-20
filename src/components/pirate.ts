@@ -27,6 +27,7 @@ export default class Pirate {
 
   setMovePosition(x: number, y: number) {
     this.movePosition = new Phaser.Math.Vector2(x, y);
+    this.getNextBlock();
   }
 
   setTargetPosition(target: Phaser.Math.Vector2) {
@@ -41,6 +42,22 @@ export default class Pirate {
 
   getPosition() {
     return this.sprite.body.position;
+  }
+
+  getNextBlock() {
+    console.log("find next block");
+    console.log("pirate w: ", this.sprite.width);
+    console.log("pirate: ", this.sprite.x);
+    console.log("dest: ", this.movePosition.x);
+    console.log("pirate y: ", this.sprite.y);
+    console.log("dest y: ", this.movePosition.y);
+    const blocks = this.sceneRef.platformA.getBlocks().getChildren();
+    if (
+      this.movePosition.x > this.sprite.x &&
+      this.movePosition.y === this.sprite.y
+    ) {
+      console.log("move right");
+    }
   }
 
   isColliding(x: number, y: number) {
@@ -65,13 +82,14 @@ export default class Pirate {
         targetY
       );
 
-      if (distance < 5) {
+      if (distance < 2) {
         this.sprite.setVelocity(0);
         this.movePosition = undefined;
         this.setCanMove(false);
         if (!this.isEnemy) {
           this.sceneRef.roomService.readyToShoot();
         }
+        this.sprite.body.reset(targetX, targetY);
       } else {
         this.canMove &&
           this.sceneRef.physics.moveTo(this.sprite, targetX, targetY, 100);

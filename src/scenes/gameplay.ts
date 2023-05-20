@@ -1,5 +1,5 @@
 import * as Phaser from "phaser";
-import Platform from "../components/platform";
+import Platform, { WOOD_SPRITE_SIZE } from "../components/platform";
 import Pirate from "../components/pirate";
 import RoomService from "../network/roomService";
 
@@ -71,9 +71,9 @@ export default class GamePlayScene extends Phaser.Scene {
     try {
       const res = await this.roomService.createRoom(roomId);
       if (res) {
-        this.platformA = new Platform(this, 10, 200);
+        this.platformA = new Platform(this, 0, 200);
         this.platformB = new Platform(this, 800, 200, true);
-        this.pirate = new Pirate(this, 80, 300, "pirate");
+        this.pirate = new Pirate(this, WOOD_SPRITE_SIZE, 300, "pirate");
       }
     } catch (e) {
       console.log("error creating room: ", e);
