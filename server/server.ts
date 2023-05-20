@@ -64,6 +64,13 @@ io.on("connection", (socket) => {
     }
   );
 
+  socket.on(
+    "shootTarget",
+    (roomId: string, userId: string, position: { x: number; y: number }) => {
+      io.to(roomId).emit("setShootPosition", userId, position);
+    }
+  );
+
   socket.on("readyToShoot", (roomId: string, userId: string) => {
     const room = activeRooms.find((r) => r.id === roomId);
     if (room?.playerOne.id === userId) {
@@ -79,6 +86,10 @@ io.on("connection", (socket) => {
       room.playerTwo.ready = false;
       io.to(roomId).emit("shoot");
     }
+  });
+
+  socket.on("playerHit", (roomId: string, userId: string) => {
+    io.to(roomId).emit("hit", userId);
   });
 
   socket.on(

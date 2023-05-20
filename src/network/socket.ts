@@ -66,6 +66,12 @@ export default class SocketConnector {
       this.sceneRef.pirate.shoot();
       this.sceneRef.enemy.shoot();
     });
+
+    this.socket.on("hit", (userId: string) => {
+      if (this.sceneRef.roomService.getUserId() !== userId) {
+        this.sceneRef.pirate.destroy();
+      }
+    });
   }
 
   async createRoom(roomId: string): Promise<RoomCreationResponse> {
@@ -120,6 +126,10 @@ export default class SocketConnector {
     origin: Phaser.Math.Vector2
   ) {
     this.socket.emit("triggerCannon", roomId, userId, origin);
+  }
+
+  sendPlayerHit(roomId: string, userId: string) {
+    this.socket.emit("playerHit", roomId, userId);
   }
 
   removeObject(roomId: string, userId: string, x: number, y: number) {
