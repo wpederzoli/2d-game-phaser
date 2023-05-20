@@ -66,11 +66,6 @@ io.on("connection", (socket) => {
 
   socket.on("readyToShoot", (roomId: string, userId: string) => {
     const room = activeRooms.find((r) => r.id === roomId);
-    console.log(
-      "p1 ready: %s, p2 ready; %s",
-      room?.playerOne.ready,
-      room?.playerTwo.ready
-    );
     if (room?.playerOne.id === userId) {
       room.playerOne.ready = true;
     }
@@ -80,7 +75,6 @@ io.on("connection", (socket) => {
     }
 
     if (room?.playerOne.ready && room?.playerTwo.ready) {
-      console.log("both players ready");
       room.playerOne.ready = false;
       room.playerTwo.ready = false;
       io.to(roomId).emit("shoot");

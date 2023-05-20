@@ -63,7 +63,6 @@ export default class SocketConnector {
     );
 
     this.socket.on("shoot", () => {
-      console.log("shoot received");
       this.sceneRef.pirate.shoot();
       this.sceneRef.enemy.shoot();
     });

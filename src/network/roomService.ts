@@ -31,8 +31,6 @@ export default class RoomService {
 
   async joinRoom(roomId: string): Promise<boolean> {
     const room = await this.socketConnection.joinRoom(roomId);
-    console.log("this is room: ", room);
-    console.log("joined room: ", room);
     this.roomId = room.roomId;
     this.userId = room.userId;
     return room.roomId !== "";
