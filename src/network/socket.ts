@@ -32,10 +32,25 @@ export default class SocketConnector {
       }
     );
 
+    this.socket.on("readyToMove", (userId: string, canMove: boolean) => {
+      if (this.sceneRef.roomService.getUserId() !== userId) {
+        this.sceneRef.enemy.setCanMove(canMove);
+      }
+    });
+
     this.socket.on("destroyObject", (userId: string, x: number, y: number) => {
       if (this.sceneRef.roomService.getUserId() !== userId) {
         this.sceneRef.platformA.removeElementAt(x, y);
       }
+    });
+
+    this.socket.on("count", (count: number) => {
+      this.sceneRef.updateCountDown(count);
+    });
+
+    this.socket.on("playTurn", () => {
+      this.sceneRef.pirate.setCanMove(true);
+      this.sceneRef.enemy.setCanMove(true);
     });
 
     this.socket.on("shootCannon", (userId: string, coords: any) => {
@@ -73,6 +88,14 @@ export default class SocketConnector {
 
   sendMovePosition(roomId: string, userId: string, x: number, y: number) {
     this.socket.emit("movePlayer", roomId, userId, { x, y });
+  }
+
+  sendPlayerCanMove(roomId: string, userId: string, canMove: boolean) {
+    this.socket.emit("playerCanMove", roomId, userId, canMove);
+  }
+
+  startCount(roomId: string) {
+    this.socket.emit("startCount", roomId);
   }
 
   sendShootPosition(

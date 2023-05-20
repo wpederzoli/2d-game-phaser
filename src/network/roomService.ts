@@ -49,6 +49,14 @@ export default class RoomService {
     });
   }
 
+  sendPlayerMove(move: boolean) {
+    this.socketConnection.sendPlayerCanMove(this.roomId, this.userId, move);
+  }
+
+  startTurn() {
+    this.socketConnection.startCount(this.roomId);
+  }
+
   destroyBlock(x: number, y: number) {
     this.socketConnection.removeObject(this.roomId, this.userId, x, y);
   }

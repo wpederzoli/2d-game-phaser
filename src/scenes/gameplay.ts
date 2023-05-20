@@ -48,9 +48,23 @@ export default class GamePlayScene extends Phaser.Scene {
     btn.innerHTML = "Join";
     btn.onclick = () => this.spawnPlayerTwo(inputElement.value);
 
+    const btn2 = document.createElement("button");
+    btn2.innerHTML = "Play";
+    btn2.onclick = () => this.roomService.startTurn();
+
+    const countText = document.createElement("div");
+    countText.id = "countText";
+    countText.innerHTML = "10";
+
     Phaser.DOM.AddToDOM(inputElement);
     Phaser.DOM.AddToDOM(button);
     Phaser.DOM.AddToDOM(btn);
+    Phaser.DOM.AddToDOM(btn2);
+    Phaser.DOM.AddToDOM(countText);
+  }
+
+  updateCountDown(count: number) {
+    document.getElementById("countText").innerHTML = count.toString();
   }
 
   spawnPirate(x: number, y: number) {

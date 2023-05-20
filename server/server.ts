@@ -57,6 +57,25 @@ io.on("connection", (socket) => {
   });
 
   socket.on(
+    "playerCanMove",
+    (roomId: string, userId: string, canMove: boolean) => {
+      io.to(roomId).emit("readyToMove", userId, canMove);
+    }
+  );
+
+  socket.on("startCount", (roomId: string) => {
+    let count = 10;
+    let countDownInterval = setInterval(() => {
+      io.to(roomId).emit("count", count);
+      count--;
+      if (count < 0) {
+        clearInterval(countDownInterval);
+        io.to(roomId).emit("playTurn");
+      }
+    }, 1000);
+  });
+
+  socket.on(
     "removeObject",
     (roomId: string, userId: string, x: number, y: number) => {
       io.to(roomId).emit("destroyObject", userId, x, y);
