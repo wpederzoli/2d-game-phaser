@@ -24,6 +24,9 @@ export default class Cannonball {
       duration: 1000,
       onComplete: () => {
         cannonball.destroy();
+        if (this.sceneRef.enemy.isColliding(target.x, target.y)) {
+          console.log("enemy hit");
+        }
       },
       onUpdate: () => {
         this.sceneRef.physics.overlap(

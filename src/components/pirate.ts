@@ -43,6 +43,10 @@ export default class Pirate {
     return this.sprite.body.position;
   }
 
+  isColliding(x: number, y: number) {
+    return this.sprite.getBounds().contains(x, y);
+  }
+
   setCanMove(move: boolean) {
     this.canMove = move;
   }
