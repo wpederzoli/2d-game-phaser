@@ -1,7 +1,7 @@
 import * as Phaser from "phaser";
 import GamePlayScene from "../scenes/gameplay";
 import Cannonball from "./cannonball";
-import { WOOD_SPRITE_SIZE } from "./platform";
+import { PLATFORM_HEIGHT, PLATFORM_WIDTH, WOOD_SPRITE_SIZE } from "./platform";
 
 type PathNode = {
   position: Phaser.Math.Vector2;
@@ -73,7 +73,11 @@ export default class Pirate {
 
     frontiers.push(start);
 
+    const maxTries = PLATFORM_WIDTH * PLATFORM_HEIGHT;
+    let tries = 0;
+
     while (frontiers.length > 0) {
+      tries++;
       const current = this.findLowestFScoreNode(frontiers);
       const index = frontiers.indexOf(current);
       index > -1 && frontiers.splice(index, 1);
@@ -104,7 +108,10 @@ export default class Pirate {
         neighbor.hScore = this.calculateHScore(neighbor);
         neighbor.fScore = neighbor.gScore + neighbor.hScore;
       }
+
+      if (tries === maxTries) break;
     }
+    console.log("no paths found");
   }
 
   calculateHScore(node: PathNode) {
