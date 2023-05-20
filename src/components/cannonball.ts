@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import GamePlayScene from "../scenes/gameplay";
+import { WOOD_SPRITE_SIZE } from "./platform";
 
 export default class Cannonball {
   private sceneRef: GamePlayScene;
@@ -23,10 +24,16 @@ export default class Cannonball {
       y: target.y,
       duration: 1000,
       onComplete: () => {
-        cannonball.destroy();
-        if (this.sceneRef.enemy.isColliding(target.x, target.y)) {
-          console.log("enemy hit");
+        if (
+          this.sceneRef.enemy.isColliding(
+            target.x,
+            target.y - WOOD_SPRITE_SIZE / 2
+          )
+        ) {
+          this.sceneRef.enemy.destroy();
+          this.sceneRef.roomService.playerHit();
         }
+        cannonball.destroy();
       },
       onUpdate: () => {
         this.sceneRef.physics.overlap(

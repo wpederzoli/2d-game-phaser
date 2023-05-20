@@ -56,6 +56,10 @@ export default class RoomService {
     this.socketConnection.startCount(this.roomId);
   }
 
+  playerHit() {
+    this.socketConnection.sendPlayerHit(this.roomId, this.userId);
+  }
+
   destroyBlock(x: number, y: number) {
     this.socketConnection.removeObject(this.roomId, this.userId, x, y);
   }

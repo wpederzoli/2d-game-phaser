@@ -88,6 +88,10 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("playerHit", (roomId: string, userId: string) => {
+    io.to(roomId).emit("hit", userId);
+  });
+
   socket.on(
     "playerCanMove",
     (roomId: string, userId: string, canMove: boolean) => {

@@ -3,7 +3,7 @@ import GamePlayScene from "../scenes/gameplay";
 
 const PLATFORM_HEIGHT = 6;
 const PLATFORM_WIDTH = 4;
-const WOOD_SPRITE_SIZE = 64;
+export const WOOD_SPRITE_SIZE = 64;
 
 export default class Platform {
   private sceneRef: GamePlayScene;

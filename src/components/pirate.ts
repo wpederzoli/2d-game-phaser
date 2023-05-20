@@ -51,6 +51,10 @@ export default class Pirate {
     this.canMove = move;
   }
 
+  destroy() {
+    this.sprite.destroy();
+  }
+
   update(): void {
     if (this.movePosition) {
       const { x: targetX, y: targetY } = this.movePosition;
