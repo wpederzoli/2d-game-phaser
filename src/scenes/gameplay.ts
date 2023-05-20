@@ -71,9 +71,14 @@ export default class GamePlayScene extends Phaser.Scene {
     try {
       const res = await this.roomService.createRoom(roomId);
       if (res) {
-        this.platformA = new Platform(this, 0, 200);
+        this.platformA = new Platform(this, 0, WOOD_SPRITE_SIZE * 3);
         this.platformB = new Platform(this, 800, 200, true);
-        this.pirate = new Pirate(this, WOOD_SPRITE_SIZE, 300, "pirate");
+        this.pirate = new Pirate(
+          this,
+          WOOD_SPRITE_SIZE,
+          WOOD_SPRITE_SIZE * 3 + WOOD_SPRITE_SIZE / 2,
+          "pirate"
+        );
       }
     } catch (e) {
       console.log("error creating room: ", e);

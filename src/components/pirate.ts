@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import GamePlayScene from "../scenes/gameplay";
 import Cannonball from "./cannonball";
+import { WOOD_SPRITE_SIZE } from "./platform";
 
 export default class Pirate {
   private sprite: Phaser.Physics.Arcade.Sprite;
