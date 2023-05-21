@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
+import { createRoom } from "./room";
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -31,15 +32,12 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("A user connected");
 
-  socket.on("createRoom", (roomId) => {
-    activeRooms.push({
-      id: roomId,
-      playerOne: { id: socket.id, ready: false },
-      playerTwo: { id: "", ready: false },
-    });
-    console.log("roomCreated: ", activeRooms);
+  socket.on("createParty", (roomId) => {
+    console.log("create room");
+    createRoom(roomId, socket.id);
     socket.join(roomId);
-    socket.emit("roomCreated", { roomId, userId: socket.id });
+    socket.emit("partyCreated", { roomId, userId: socket.id });
+    console.log("partyCreated");
   });
 
   socket.on("joinRoom", (roomId) => {

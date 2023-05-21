@@ -7,10 +7,10 @@ export default class RoomService {
   private userId: string;
   private isHost: boolean;
 
-  constructor(scene: GamePlayScene) {
+  constructor(scene: GamePlayScene, roomId: string, isHost: boolean) {
     this.socketConnection = new SocketConnector(scene);
-    this.roomId = "";
-    this.isHost = false;
+    this.roomId = roomId;
+    this.isHost = isHost;
   }
 
   getUserId() {

@@ -14,6 +14,10 @@ export default class GamePlayScene extends Phaser.Scene {
     super({ key: "GamePlayScene" });
   }
 
+  init(args: { roomId: string; isHost: boolean }) {
+    this.roomService = new RoomService(this, args.roomId, args.isHost);
+  }
+
   preload() {
     this.load.image("water", "../../assets/water.png");
     this.load.image("wood", "../../assets/wood.png");
@@ -27,8 +31,6 @@ export default class GamePlayScene extends Phaser.Scene {
     const scaleY = (this.game.config.height as number) / water.height;
     const scale = Math.max(scaleX, scaleY);
     water.setScale(scale).setScrollFactor(0);
-
-    this.roomService = new RoomService(this);
 
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse?.disableContextMenu();

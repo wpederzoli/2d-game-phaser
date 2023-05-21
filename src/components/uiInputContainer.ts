@@ -1,12 +1,18 @@
 import * as Phaser from "phaser";
 
 export default class UIInputContainer {
-  constructor(scene: Phaser.Scene) {
+  constructor(
+    scene: Phaser.Scene,
+    actionText: string,
+    actionCb: (name: string) => void
+  ) {
     const container = document.createElement("div");
     const inputField = document.createElement("input");
     const title = document.createElement("h3");
     const btnsContainer = document.createElement("div");
     const btnCreate = document.createElement("button");
+    btnCreate.innerHTML = actionText;
+    btnCreate.onclick = () => actionCb(inputField.value);
     const btnCancel = document.createElement("button");
 
     const gameCanvas = scene.game.canvas;
@@ -91,7 +97,6 @@ export default class UIInputContainer {
       btnCreateStyles.backgroundColor = "#1c1c53";
     };
 
-    btnCreate.innerHTML = "Create";
     btnCancel.innerHTML = "Cancel";
 
     container.appendChild(title);
