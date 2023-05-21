@@ -1,6 +1,10 @@
 import * as Phaser from "phaser";
-import Platform, { WOOD_SPRITE_SIZE } from "../components/platform";
-import Pirate from "../components/pirate";
+import Platform, {
+  LEFT_PLATFORM_POS,
+  RIGHT_PLATFORM_POS,
+  WOOD_SPRITE_SIZE,
+} from "../components/platform";
+import Pirate, { LEFT_PIRATE_POS } from "../components/pirate";
 import RoomService from "../network/roomService";
 
 export default class GamePlayScene extends Phaser.Scene {
@@ -16,6 +20,7 @@ export default class GamePlayScene extends Phaser.Scene {
 
   init(args: { roomId: string; isHost: boolean }) {
     this.roomService = new RoomService(this, args.roomId, args.isHost);
+    this.spawnPlayer();
   }
 
   preload() {
@@ -67,6 +72,27 @@ export default class GamePlayScene extends Phaser.Scene {
 
   spawnPirate(x: number, y: number) {
     this.enemy = new Pirate(this, x, y, "pirate", true);
+  }
+
+  spawnPlayer() {
+    console.log("Spawning player one");
+    this.platformA = new Platform(
+      this,
+      LEFT_PLATFORM_POS.x,
+      LEFT_PLATFORM_POS.y
+    );
+    this.platformB = new Platform(
+      this,
+      RIGHT_PLATFORM_POS.x,
+      RIGHT_PLATFORM_POS.y,
+      true
+    );
+    this.pirate = new Pirate(
+      this,
+      LEFT_PIRATE_POS.x,
+      LEFT_PLATFORM_POS.y,
+      "pirate"
+    );
   }
 
   async spawnPlayerOne(roomId: string) {
