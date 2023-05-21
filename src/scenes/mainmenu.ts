@@ -5,6 +5,10 @@ import StartPartyService from "../network/partyCreation";
 
 export default class MainMenuScene extends Phaser.Scene {
   private partyService: StartPartyService;
+  private createButton: UIButton;
+  private joinButton: UIButton;
+  private creditsButton: UIButton;
+  private inputContainer: UIInputContainer;
 
   constructor() {
     super({ key: "MainMenuScene" });
@@ -12,14 +16,24 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   create() {
-    new UIButton(this, 400, 250, "Create Party", () => this.createPartyClick());
-    new UIButton(this, 400, 300, "Join Party", this.joinPartyClick);
-    new UIButton(this, 400, 350, "Credits");
+    this.createButton = new UIButton(this, 400, 250, "Create Party", () =>
+      this.createPartyClick()
+    );
+    this.joinButton = new UIButton(
+      this,
+      400,
+      300,
+      "Join Party",
+      this.joinPartyClick
+    );
+    this.creditsButton = new UIButton(this, 400, 350, "Credits");
   }
 
   createPartyClick() {
-    new UIInputContainer(this, "Create", (roomName: string) =>
-      this.startParty(roomName)
+    this.inputContainer = new UIInputContainer(
+      this,
+      "Create",
+      (roomName: string) => this.startParty(roomName)
     );
   }
 
@@ -32,6 +46,10 @@ export default class MainMenuScene extends Phaser.Scene {
     const res = await this.partyService.createParty(roomName);
     if (res.roomId !== "") {
       console.log("starting scene");
+      this.inputContainer.destroy();
+      this.createButton.destroy();
+      this.joinButton.destroy();
+      this.creditsButton.destroy();
       this.game.scene.start("GamePlayScene", {
         roomId: res.roomId,
         isHost: true,

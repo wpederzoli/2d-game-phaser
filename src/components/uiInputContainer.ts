@@ -1,12 +1,14 @@
 import * as Phaser from "phaser";
 
 export default class UIInputContainer {
+  private container: HTMLElement;
+
   constructor(
     scene: Phaser.Scene,
     actionText: string,
     actionCb: (name: string) => void
   ) {
-    const container = document.createElement("div");
+    this.container = document.createElement("div");
     const inputField = document.createElement("input");
     const title = document.createElement("h3");
     const btnsContainer = document.createElement("div");
@@ -17,9 +19,9 @@ export default class UIInputContainer {
 
     const gameCanvas = scene.game.canvas;
     const gameContainer = gameCanvas.parentElement;
-    gameContainer?.appendChild(container);
+    gameContainer?.appendChild(this.container);
 
-    const divStyles = container.style;
+    const divStyles = this.container.style;
     divStyles.position = "absolute";
     divStyles.left = scene.cameras.main.width / 2 - 200 + "px";
     divStyles.top = scene.cameras.main.height / 2 - 150 + "px";
@@ -77,7 +79,7 @@ export default class UIInputContainer {
     };
 
     btnCancel.onclick = () => {
-      container.remove();
+      this.container.remove();
     };
 
     const btnCreateStyles = btnCreate.style;
@@ -99,10 +101,14 @@ export default class UIInputContainer {
 
     btnCancel.innerHTML = "Cancel";
 
-    container.appendChild(title);
-    container.appendChild(inputField);
-    container.appendChild(btnsContainer);
+    this.container.appendChild(title);
+    this.container.appendChild(inputField);
+    this.container.appendChild(btnsContainer);
     btnsContainer.appendChild(btnCancel);
     btnsContainer.appendChild(btnCreate);
+  }
+
+  destroy() {
+    this.container.remove();
   }
 }

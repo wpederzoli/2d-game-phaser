@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 
 export default class UIButton {
+  private btn: HTMLElement;
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -8,14 +9,14 @@ export default class UIButton {
     text: string,
     cb?: () => void
   ) {
-    const btn = document.createElement("button");
-    btn.innerHTML = text;
+    this.btn = document.createElement("button");
+    this.btn.innerHTML = text;
 
     const gameCanvas = scene.game.canvas;
     const gameContainer = gameCanvas.parentElement;
-    gameContainer.appendChild(btn);
+    gameContainer.appendChild(this.btn);
 
-    const btnStyle = btn.style;
+    const btnStyle = this.btn.style;
     btnStyle.position = "absolute";
     btnStyle.left = x + "px";
     btnStyle.top = y + "px";
@@ -29,16 +30,20 @@ export default class UIButton {
     btnStyle.width = `${scene.cameras.default.width / 4}px`;
     btnStyle.borderRadius = "10px";
 
-    btn.onmouseover = () => {
+    this.btn.onmouseover = () => {
       btnStyle.backgroundColor = "#fffada";
     };
 
-    btn.onmouseout = () => {
+    this.btn.onmouseout = () => {
       btnStyle.backgroundColor = "#ffffff";
     };
 
-    btn.addEventListener("click", () => {
+    this.btn.addEventListener("click", () => {
       cb && cb();
     });
+  }
+
+  destroy() {
+    this.btn.remove();
   }
 }
