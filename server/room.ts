@@ -9,6 +9,7 @@ export type Player = {
   ready: boolean;
 };
 
+//getter
 export const activeRooms: Room[] = [];
 
 export const createRoom = (roomId: string, userId: string) => {

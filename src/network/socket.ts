@@ -42,7 +42,7 @@ export default class SocketConnector {
     });
 
     this.socket.on("count", (count: number) => {
-      console.log("count received: ", count);
+      this.sceneRef.ui.updateCount(count.toString());
     });
 
     this.socket.on("playTurn", () => {
