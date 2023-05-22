@@ -1,4 +1,4 @@
-import io, { Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import GamePlayScene from "../scenes/gameplay";
 
 export default class SocketConnector {
@@ -17,7 +17,6 @@ export default class SocketConnector {
     });
 
     this.socket.on("joinedParty", (userId: string) => {
-      console.log("joined party: ", userId);
       if (this.sceneRef.roomService.getUserId() !== userId) {
         this.sceneRef.spawnEnemyPirate();
       }
