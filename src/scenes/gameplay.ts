@@ -105,7 +105,8 @@ export default class GamePlayScene extends Phaser.Scene {
         this,
         LEFT_PIRATE_POS.x,
         LEFT_PIRATE_POS.y,
-        "pirate"
+        "pirate",
+        true
       );
       this.pirate = new Pirate(
         this,

@@ -24,9 +24,6 @@ export default class RoomService {
   getUserId() {
     return this.userId;
   }
-  getRoomId() {
-    return this.roomId;
-  }
 
   IsHost() {
     return this.isHost;

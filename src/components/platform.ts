@@ -66,6 +66,7 @@ export default class Platform {
     block.on("pointerdown", async () => {
       if (!enemy && this.sceneRef.input.activePointer.leftButtonDown()) {
         this.sceneRef.pirate?.setMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
+        this.sceneRef.pirate?.findPath();
         this.sceneRef.roomService.sendMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
       }
 

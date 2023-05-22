@@ -48,7 +48,6 @@ export default class Pirate {
 
   setMovePosition(x: number, y: number) {
     this.movePosition = new Phaser.Math.Vector2(x, y);
-    this.findPath();
   }
 
   setTargetPosition(target: Phaser.Math.Vector2) {
@@ -83,7 +82,8 @@ export default class Pirate {
 
     frontiers.push(start);
 
-    const maxTries = PLATFORM_WIDTH * PLATFORM_HEIGHT;
+    const maxTries =
+      PLATFORM_WIDTH * PLATFORM_HEIGHT * (PLATFORM_WIDTH * PLATFORM_HEIGHT);
     let tries = 0;
 
     while (frontiers.length > 0) {
