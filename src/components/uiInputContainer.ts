@@ -5,6 +5,7 @@ export default class UIInputContainer {
 
   constructor(
     scene: Phaser.Scene,
+    header: string,
     actionText: string,
     actionCb: (name: string) => void
   ) {
@@ -35,7 +36,7 @@ export default class UIInputContainer {
     divStyles.justifyContent = "center";
     divStyles.alignItems = "center";
 
-    title.innerHTML = "New Party";
+    title.innerHTML = header;
     const titleStyles = title.style;
     titleStyles.color = "#ffff";
     titleStyles.fontSize = "25px";

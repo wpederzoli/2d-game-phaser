@@ -4,7 +4,10 @@ import Platform, {
   RIGHT_PLATFORM_POS,
   WOOD_SPRITE_SIZE,
 } from "../components/platform";
-import Pirate, { LEFT_PIRATE_POS } from "../components/pirate";
+import Pirate, {
+  LEFT_PIRATE_POS,
+  RIGHT_PIRATE_POS,
+} from "../components/pirate";
 import RoomService from "../network/roomService";
 
 export default class GamePlayScene extends Phaser.Scene {
@@ -36,7 +39,7 @@ export default class GamePlayScene extends Phaser.Scene {
     const scale = Math.max(scaleX, scaleY);
     water.setScale(scale).setScrollFactor(0);
 
-    this.roomService.IsHost() && this.spawnPlayer();
+    this.spawnPlayer();
 
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse?.disableContextMenu();
@@ -57,24 +60,67 @@ export default class GamePlayScene extends Phaser.Scene {
   }
 
   spawnPlayer() {
-    console.log("Spawning player one");
-    this.platformA = new Platform(
-      this,
-      LEFT_PLATFORM_POS.x,
-      LEFT_PLATFORM_POS.y
-    );
-    this.platformB = new Platform(
-      this,
-      RIGHT_PLATFORM_POS.x,
-      RIGHT_PLATFORM_POS.y,
-      true
-    );
-    this.pirate = new Pirate(
-      this,
-      LEFT_PIRATE_POS.x,
-      LEFT_PIRATE_POS.y,
-      "pirate"
-    );
+    if (this.roomService.IsHost()) {
+      this.platformA = new Platform(
+        this,
+        LEFT_PLATFORM_POS.x,
+        LEFT_PLATFORM_POS.y
+      );
+      this.platformB = new Platform(
+        this,
+        RIGHT_PLATFORM_POS.x,
+        RIGHT_PLATFORM_POS.y,
+        true
+      );
+      this.pirate = new Pirate(
+        this,
+        LEFT_PIRATE_POS.x,
+        LEFT_PIRATE_POS.y,
+        "pirate"
+      );
+    } else {
+      this.platformA = new Platform(
+        this,
+        RIGHT_PLATFORM_POS.x,
+        RIGHT_PLATFORM_POS.y
+      );
+      this.platformB = new Platform(
+        this,
+        LEFT_PLATFORM_POS.x,
+        LEFT_PLATFORM_POS.y,
+        true
+      );
+      this.enemy = new Pirate(
+        this,
+        LEFT_PIRATE_POS.x,
+        LEFT_PIRATE_POS.y,
+        "pirate"
+      );
+      this.pirate = new Pirate(
+        this,
+        RIGHT_PIRATE_POS.x,
+        RIGHT_PIRATE_POS.y,
+        "pirate"
+      );
+    }
+
+    // this.platformA = new Platform(
+    //   this,
+    //   LEFT_PLATFORM_POS.x,
+    //   LEFT_PLATFORM_POS.y
+    // );
+    // this.platformB = new Platform(
+    //   this,
+    //   RIGHT_PLATFORM_POS.x,
+    //   RIGHT_PLATFORM_POS.y,
+    //   true
+    // );
+    // this.pirate = new Pirate(
+    //   this,
+    //   LEFT_PIRATE_POS.x,
+    //   LEFT_PIRATE_POS.y,
+    //   "pirate"
+    // );
   }
 
   async spawnPlayerOne(roomId: string) {

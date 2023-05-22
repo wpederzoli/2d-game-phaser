@@ -28,6 +28,7 @@ export default class MainMenuScene extends Phaser.Scene {
   createPartyClick() {
     this.inputContainer = new UIInputContainer(
       this,
+      "New Party",
       "Create",
       (roomName: string) => this.startParty(roomName)
     );
@@ -36,6 +37,7 @@ export default class MainMenuScene extends Phaser.Scene {
   joinPartyClick() {
     this.inputContainer = new UIInputContainer(
       this,
+      "Join Party",
       "Join",
       (roomName: string) => this.joinParty(roomName)
     );
