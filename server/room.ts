@@ -4,7 +4,7 @@ export type Room = {
   playerTwo: Player;
 };
 
-type Player = {
+export type Player = {
   id: string;
   ready: boolean;
 };

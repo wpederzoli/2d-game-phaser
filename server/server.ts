@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
   socket.on("createParty", (roomId) => {
     createRoom(roomId, socket.id);
     socket.join(roomId);
-    socket.emit("partyCreated", { roomId, userId: socket.id });
+    io.to(roomId).emit("partyCreated", { roomId, userId: socket.id });
   });
 
   socket.on("joinParty", (roomId) => {

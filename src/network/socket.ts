@@ -19,6 +19,7 @@ export default class SocketConnector {
     this.socket.on("joinedParty", (userId: string) => {
       if (this.sceneRef.roomService.getUserId() !== userId) {
         this.sceneRef.spawnEnemyPirate();
+        this.sceneRef.ui.updateText("Ready to start");
       }
     });
 
@@ -44,7 +45,7 @@ export default class SocketConnector {
     });
 
     this.socket.on("count", (count: number) => {
-      this.sceneRef.updateCountDown(count);
+      console.log("count received: ", count);
     });
 
     this.socket.on("playTurn", () => {
