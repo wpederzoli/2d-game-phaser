@@ -11,6 +11,16 @@ type PathNode = {
   parent: PathNode;
 };
 
+export const LEFT_PIRATE_POS = {
+  x: WOOD_SPRITE_SIZE,
+  y: WOOD_SPRITE_SIZE * 3.5,
+};
+
+export const RIGHT_PIRATE_POS = {
+  x: WOOD_SPRITE_SIZE * 16,
+  y: WOOD_SPRITE_SIZE * 3.5,
+};
+
 export default class Pirate {
   private sprite: Phaser.Physics.Arcade.Sprite;
   private sceneRef: GamePlayScene;

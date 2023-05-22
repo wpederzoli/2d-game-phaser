@@ -1,4 +1,5 @@
 import * as Phaser from "phaser";
+import MainMenyScene from "./scenes/mainmenu";
 import GamePlayScene from "./scenes/gameplay";
 
 const config: Phaser.Types.Core.GameConfig = {
@@ -14,7 +15,7 @@ const config: Phaser.Types.Core.GameConfig = {
   fps: {
     min: 30,
   },
-  scene: [GamePlayScene],
+  scene: [MainMenyScene, GamePlayScene],
 };
 
 export default new Phaser.Game(config);

@@ -4,6 +4,11 @@ import GamePlayScene from "../scenes/gameplay";
 export const PLATFORM_HEIGHT = 6;
 export const PLATFORM_WIDTH = 4;
 export const WOOD_SPRITE_SIZE = 64;
+export const LEFT_PLATFORM_POS = { x: 0, y: WOOD_SPRITE_SIZE * 3 };
+export const RIGHT_PLATFORM_POS = {
+  x: WOOD_SPRITE_SIZE * 13,
+  y: WOOD_SPRITE_SIZE * 3,
+};
 
 export default class Platform {
   private sceneRef: GamePlayScene;

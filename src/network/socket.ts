@@ -1,20 +1,12 @@
-import io, { Socket } from "socket.io-client";
-import { WOOD_SPRITE_SIZE } from "../components/platform";
+import { Socket } from "socket.io-client";
 import GamePlayScene from "../scenes/gameplay";
-
-const URL = "http://localhost:3000";
-
-type RoomCreationResponse = {
-  roomId: string;
-  userId: string;
-};
 
 export default class SocketConnector {
   private socket: Socket;
   private sceneRef: GamePlayScene;
 
-  constructor(scene: GamePlayScene) {
-    this.socket = io(URL);
+  constructor(connection: Socket, scene: GamePlayScene) {
+    this.socket = connection;
     this.sceneRef = scene;
     this.setup();
   }
@@ -22,6 +14,12 @@ export default class SocketConnector {
   private setup() {
     this.socket.on("connect", () => {
       console.log("Welcome to the server");
+    });
+
+    this.socket.on("joinedParty", (userId: string) => {
+      if (this.sceneRef.roomService.getUserId() !== userId) {
+        this.sceneRef.spawnEnemyPirate();
+      }
     });
 
     this.socket.on(
@@ -72,28 +70,6 @@ export default class SocketConnector {
       if (this.sceneRef.roomService.getUserId() !== userId) {
         this.sceneRef.pirate.destroy();
       }
-    });
-  }
-
-  async createRoom(roomId: string): Promise<RoomCreationResponse> {
-    this.socket.emit("createRoom", roomId);
-
-    this.socket.on("userJoined", () => {
-      this.sceneRef.spawnPirate(WOOD_SPRITE_SIZE * 16, WOOD_SPRITE_SIZE * 3.5); //Removing half the size of a sprite to center it on square
-    });
-    return new Promise((resolve) => {
-      this.socket.on("roomCreated", (roomInfo: RoomCreationResponse) => {
-        resolve(roomInfo);
-      });
-    });
-  }
-
-  async joinRoom(roomId: string): Promise<RoomCreationResponse> {
-    this.socket.emit("joinRoom", roomId);
-    return new Promise((resolve) => {
-      this.socket.on("joinedRoom", (roomInfo: RoomCreationResponse) => {
-        resolve(roomInfo);
-      });
     });
   }
 

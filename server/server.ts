@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
+import { createRoom, joinRoom } from "./room";
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -31,30 +32,17 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("A user connected");
 
-  socket.on("createRoom", (roomId) => {
-    activeRooms.push({
-      id: roomId,
-      playerOne: { id: socket.id, ready: false },
-      playerTwo: { id: "", ready: false },
-    });
-    console.log("roomCreated: ", activeRooms);
+  socket.on("createParty", (roomId) => {
+    createRoom(roomId, socket.id);
     socket.join(roomId);
-    socket.emit("roomCreated", { roomId, userId: socket.id });
+    socket.emit("partyCreated", { roomId, userId: socket.id });
   });
 
-  socket.on("joinRoom", (roomId) => {
-    const room = activeRooms.find((room) => room.id === roomId);
-    if (room) {
-      room.playerTwo.id = socket.id;
+  socket.on("joinParty", (roomId) => {
+    if (joinRoom(roomId, socket.id)) {
       socket.join(roomId);
-      io.to(roomId).emit("userJoined", socket.id);
+      io.to(roomId).emit("joinedParty", roomId, socket.id);
     }
-
-    socket.emit("joinedRoom", {
-      roomId: room ? room?.id : "",
-      userId: socket.id,
-    });
-    console.log("joining room: ", activeRooms);
   });
 
   socket.on(
