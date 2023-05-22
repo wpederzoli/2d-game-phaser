@@ -12,10 +12,12 @@ export default class RoomService {
     scene: GamePlayScene,
     connection: Socket,
     roomId: string,
+    userId: string,
     isHost: boolean
   ) {
     this.socketConnection = new SocketConnector(connection, scene);
     this.roomId = roomId;
+    this.userId = userId;
     this.isHost = isHost;
   }
 

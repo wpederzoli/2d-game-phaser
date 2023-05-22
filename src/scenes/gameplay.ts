@@ -9,6 +9,7 @@ import Pirate, {
   RIGHT_PIRATE_POS,
 } from "../components/pirate";
 import RoomService from "../network/roomService";
+import GamePlayUI from "../components/gamePlayUI";
 
 export default class GamePlayScene extends Phaser.Scene {
   roomService: RoomService;
@@ -16,16 +17,23 @@ export default class GamePlayScene extends Phaser.Scene {
   platformB: Platform;
   pirate: Pirate;
   enemy: Pirate;
+  ui: GamePlayUI;
 
   constructor() {
     super({ key: "GamePlayScene" });
   }
 
-  init(args: { connection: Socket; roomId: string; isHost: boolean }) {
+  init(args: {
+    connection: Socket;
+    roomId: string;
+    userId: string;
+    isHost: boolean;
+  }) {
     this.roomService = new RoomService(
       this,
       args.connection,
       args.roomId,
+      args.userId,
       args.isHost
     );
   }
@@ -49,15 +57,7 @@ export default class GamePlayScene extends Phaser.Scene {
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse?.disableContextMenu();
 
-    const countText = document.createElement("div");
-    countText.id = "countText";
-    countText.innerHTML = "3";
-
-    Phaser.DOM.AddToDOM(countText);
-  }
-
-  updateCountDown(count: number) {
-    document.getElementById("countText").innerHTML = count.toString();
+    this.ui = new GamePlayUI(this, this.roomService.IsHost());
   }
 
   spawnEnemyPirate() {
@@ -105,7 +105,8 @@ export default class GamePlayScene extends Phaser.Scene {
         this,
         LEFT_PIRATE_POS.x,
         LEFT_PIRATE_POS.y,
-        "pirate"
+        "pirate",
+        true
       );
       this.pirate = new Pirate(
         this,

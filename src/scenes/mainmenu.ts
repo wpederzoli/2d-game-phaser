@@ -16,13 +16,26 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   create() {
-    this.createButton = new UIButton(this, 400, 250, "Create Party", () =>
-      this.createPartyClick()
+    this.createButton = new UIButton(
+      this,
+      this.cameras.main.width / 2,
+      250,
+      "Create Party",
+      () => this.createPartyClick()
     );
-    this.joinButton = new UIButton(this, 400, 300, "Join Party", () =>
-      this.joinPartyClick()
+    this.joinButton = new UIButton(
+      this,
+      this.cameras.main.width / 2,
+      300,
+      "Join Party",
+      () => this.joinPartyClick()
     );
-    this.creditsButton = new UIButton(this, 400, 350, "Credits");
+    this.creditsButton = new UIButton(
+      this,
+      this.cameras.main.width / 2,
+      350,
+      "Credits"
+    );
   }
 
   createPartyClick() {
@@ -50,6 +63,7 @@ export default class MainMenuScene extends Phaser.Scene {
       this.game.scene.start("GamePlayScene", {
         connection: this.partyService.getSocket(),
         roomId: res.roomId,
+        userId: res.userId,
         isHost: true,
       });
     }
@@ -62,6 +76,7 @@ export default class MainMenuScene extends Phaser.Scene {
       this.game.scene.start("GamePlayScene", {
         connection: this.partyService.getSocket(),
         roomId: res.roomId,
+        userId: res.userId,
         isHost: false,
       });
     }

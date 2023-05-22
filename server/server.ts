@@ -1,29 +1,16 @@
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
-import { createRoom, joinRoom } from "./room";
+import { createRoom, joinRoom, activeRooms } from "./room";
 
 const port = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
 
-type Room = {
-  id: string;
-  playerOne: Player;
-  playerTwo: Player;
-};
-
-type Player = {
-  id: string;
-  ready: boolean;
-};
-
 type PlayerPosition = {
   x: number;
   y: number;
 };
-
-const activeRooms: Room[] = [];
 
 const io = new Server(server, {
   cors: { origin: "http://127.0.0.1:8085" },
@@ -35,7 +22,7 @@ io.on("connection", (socket) => {
   socket.on("createParty", (roomId) => {
     createRoom(roomId, socket.id);
     socket.join(roomId);
-    socket.emit("partyCreated", { roomId, userId: socket.id });
+    io.to(roomId).emit("partyCreated", roomId, socket.id);
   });
 
   socket.on("joinParty", (roomId) => {

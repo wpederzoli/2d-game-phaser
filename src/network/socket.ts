@@ -12,21 +12,24 @@ export default class SocketConnector {
   }
 
   private setup() {
-    this.socket.on("connect", () => {
-      console.log("Welcome to the server");
-    });
-
     this.socket.on("joinedParty", (userId: string) => {
       if (this.sceneRef.roomService.getUserId() !== userId) {
         this.sceneRef.spawnEnemyPirate();
+        this.sceneRef.ui.updateText("Ready to start");
+        this.sceneRef.ui.showStartButton(true);
       }
     });
 
     this.socket.on(
       "updatePosition",
       (userId: string, position: { x: number; y: number }) => {
+        console.log("update position received: ", userId);
         if (this.sceneRef.roomService.getUserId() !== userId) {
           this.sceneRef.enemy.setMovePosition(position.x, position.y);
+          this.sceneRef.enemy.findPath();
+        } else {
+          this.sceneRef.pirate.setMovePosition(position.x, position.y);
+          this.sceneRef.pirate.findPath();
         }
       }
     );
@@ -44,7 +47,7 @@ export default class SocketConnector {
     });
 
     this.socket.on("count", (count: number) => {
-      this.sceneRef.updateCountDown(count);
+      this.sceneRef.ui.updateCount(count.toString());
     });
 
     this.socket.on("playTurn", () => {
