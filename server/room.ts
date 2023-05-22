@@ -18,3 +18,13 @@ export const createRoom = (roomId: string, userId: string) => {
     playerTwo: { id: "", ready: false },
   });
 };
+
+export const joinRoom = (roomId: string, userId: string): boolean => {
+  const room = activeRooms.find((r) => r.id === roomId);
+  if (room) {
+    room.playerTwo.id = userId;
+    return true;
+  }
+
+  return false;
+};

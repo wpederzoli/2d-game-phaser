@@ -19,12 +19,8 @@ export default class MainMenuScene extends Phaser.Scene {
     this.createButton = new UIButton(this, 400, 250, "Create Party", () =>
       this.createPartyClick()
     );
-    this.joinButton = new UIButton(
-      this,
-      400,
-      300,
-      "Join Party",
-      this.joinPartyClick
+    this.joinButton = new UIButton(this, 400, 300, "Join Party", () =>
+      this.joinPartyClick()
     );
     this.creditsButton = new UIButton(this, 400, 350, "Credits");
   }
@@ -38,22 +34,39 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   joinPartyClick() {
-    console.log("join party clicked");
+    this.inputContainer = new UIInputContainer(
+      this,
+      "Join",
+      (roomName: string) => this.joinParty(roomName)
+    );
   }
 
   async startParty(roomName: string) {
-    console.log("start party");
     const res = await this.partyService.createParty(roomName);
     if (res.roomId !== "") {
-      console.log("starting scene");
-      this.inputContainer.destroy();
-      this.createButton.destroy();
-      this.joinButton.destroy();
-      this.creditsButton.destroy();
+      this.clearUI();
       this.game.scene.start("GamePlayScene", {
         roomId: res.roomId,
         isHost: true,
       });
     }
+  }
+
+  async joinParty(roomName: string) {
+    const res = await this.partyService.joinParty(roomName);
+    if (res.roomId !== "") {
+      this.clearUI();
+      this.game.scene.start("GamePlayScene", {
+        roomId: res.roomId,
+        isHost: false,
+      });
+    }
+  }
+
+  clearUI() {
+    this.inputContainer.destroy();
+    this.createButton.destroy();
+    this.joinButton.destroy();
+    this.creditsButton.destroy();
   }
 }

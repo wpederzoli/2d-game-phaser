@@ -1,7 +1,7 @@
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
-import { createRoom } from "./room";
+import { createRoom, joinRoom } from "./room";
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -33,26 +33,16 @@ io.on("connection", (socket) => {
   console.log("A user connected");
 
   socket.on("createParty", (roomId) => {
-    console.log("create room");
     createRoom(roomId, socket.id);
     socket.join(roomId);
     socket.emit("partyCreated", { roomId, userId: socket.id });
-    console.log("partyCreated");
   });
 
-  socket.on("joinRoom", (roomId) => {
-    const room = activeRooms.find((room) => room.id === roomId);
-    if (room) {
-      room.playerTwo.id = socket.id;
+  socket.on("joinParty", (roomId) => {
+    if (joinRoom(roomId, socket.id)) {
       socket.join(roomId);
-      io.to(roomId).emit("userJoined", socket.id);
+      io.to(roomId).emit("joinedParty", roomId, socket.id);
     }
-
-    socket.emit("joinedRoom", {
-      roomId: room ? room?.id : "",
-      userId: socket.id,
-    });
-    console.log("joining room: ", activeRooms);
   });
 
   socket.on(
