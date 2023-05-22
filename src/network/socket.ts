@@ -12,10 +12,6 @@ export default class SocketConnector {
   }
 
   private setup() {
-    this.socket.on("connect", () => {
-      console.log("Welcome to the server");
-    });
-
     this.socket.on("joinedParty", (userId: string) => {
       if (this.sceneRef.roomService.getUserId() !== userId) {
         this.sceneRef.spawnEnemyPirate();

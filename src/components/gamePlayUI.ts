@@ -32,6 +32,8 @@ export default class GamePlayUI {
         "Start",
         () => this.sceneRef.roomService.startTurn()
       );
+    } else {
+      this.starButton && this.starButton.destroy();
     }
   }
 }

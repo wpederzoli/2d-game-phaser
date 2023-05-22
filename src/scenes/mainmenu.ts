@@ -63,6 +63,7 @@ export default class MainMenuScene extends Phaser.Scene {
       this.game.scene.start("GamePlayScene", {
         connection: this.partyService.getSocket(),
         roomId: res.roomId,
+        userId: res.userId,
         isHost: true,
       });
     }
@@ -75,6 +76,7 @@ export default class MainMenuScene extends Phaser.Scene {
       this.game.scene.start("GamePlayScene", {
         connection: this.partyService.getSocket(),
         roomId: res.roomId,
+        userId: res.userId,
         isHost: false,
       });
     }

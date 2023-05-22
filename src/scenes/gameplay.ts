@@ -23,11 +23,17 @@ export default class GamePlayScene extends Phaser.Scene {
     super({ key: "GamePlayScene" });
   }
 
-  init(args: { connection: Socket; roomId: string; isHost: boolean }) {
+  init(args: {
+    connection: Socket;
+    roomId: string;
+    userId: string;
+    isHost: boolean;
+  }) {
     this.roomService = new RoomService(
       this,
       args.connection,
       args.roomId,
+      args.userId,
       args.isHost
     );
   }

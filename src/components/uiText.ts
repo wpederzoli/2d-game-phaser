@@ -3,13 +3,11 @@ import * as Phaser from "phaser";
 export default class UIText {
   private text: HTMLElement;
   private x: number;
-  private y: number;
 
   constructor(scene: Phaser.Scene, x: number, y: number, text: string) {
     this.text = document.createElement("h3");
     this.text.innerHTML = text;
     this.x = x;
-    this.y = y;
 
     const gameCanvas = scene.game.canvas;
     const gameContainer = gameCanvas.parentElement;

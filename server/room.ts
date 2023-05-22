@@ -9,7 +9,7 @@ export type Player = {
   ready: boolean;
 };
 
-const activeRooms: Room[] = [];
+export const activeRooms: Room[] = [];
 
 export const createRoom = (roomId: string, userId: string) => {
   activeRooms.push({
@@ -23,6 +23,7 @@ export const joinRoom = (roomId: string, userId: string): boolean => {
   const room = activeRooms.find((r) => r.id === roomId);
   if (room) {
     room.playerTwo.id = userId;
+    room.playerTwo.ready = false;
     return true;
   }
 
