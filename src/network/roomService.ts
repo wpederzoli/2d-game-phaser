@@ -1,3 +1,4 @@
+import { Socket } from "socket.io-client";
 import GamePlayScene from "../scenes/gameplay";
 import SocketConnector from "./socket";
 
@@ -7,8 +8,13 @@ export default class RoomService {
   private userId: string;
   private isHost: boolean;
 
-  constructor(scene: GamePlayScene, roomId: string, isHost: boolean) {
-    this.socketConnection = new SocketConnector(scene);
+  constructor(
+    scene: GamePlayScene,
+    connection: Socket,
+    roomId: string,
+    isHost: boolean
+  ) {
+    this.socketConnection = new SocketConnector(connection, scene);
     this.roomId = roomId;
     this.isHost = isHost;
   }
@@ -19,21 +25,6 @@ export default class RoomService {
 
   IsHost() {
     return this.isHost;
-  }
-
-  async createRoom(roomId: string): Promise<boolean> {
-    const room = await this.socketConnection.createRoom(roomId);
-    this.roomId = room.roomId;
-    this.isHost = true;
-    this.userId = room.userId;
-    return room.roomId !== "";
-  }
-
-  async joinRoom(roomId: string): Promise<boolean> {
-    const room = await this.socketConnection.joinRoom(roomId);
-    this.roomId = room.roomId;
-    this.userId = room.userId;
-    return room.roomId !== "";
   }
 
   sendMovePosition(x: number, y: number) {

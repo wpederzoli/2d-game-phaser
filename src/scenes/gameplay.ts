@@ -1,8 +1,8 @@
 import * as Phaser from "phaser";
+import { Socket } from "socket.io-client";
 import Platform, {
   LEFT_PLATFORM_POS,
   RIGHT_PLATFORM_POS,
-  WOOD_SPRITE_SIZE,
 } from "../components/platform";
 import Pirate, {
   LEFT_PIRATE_POS,
@@ -21,8 +21,13 @@ export default class GamePlayScene extends Phaser.Scene {
     super({ key: "GamePlayScene" });
   }
 
-  init(args: { roomId: string; isHost: boolean }) {
-    this.roomService = new RoomService(this, args.roomId, args.isHost);
+  init(args: { connection: Socket; roomId: string; isHost: boolean }) {
+    this.roomService = new RoomService(
+      this,
+      args.connection,
+      args.roomId,
+      args.isHost
+    );
   }
 
   preload() {
@@ -55,8 +60,14 @@ export default class GamePlayScene extends Phaser.Scene {
     document.getElementById("countText").innerHTML = count.toString();
   }
 
-  spawnPirate(x: number, y: number) {
-    this.enemy = new Pirate(this, x, y, "pirate", true);
+  spawnEnemyPirate() {
+    this.enemy = new Pirate(
+      this,
+      RIGHT_PIRATE_POS.x,
+      RIGHT_PIRATE_POS.y,
+      "pirate",
+      true
+    );
   }
 
   spawnPlayer() {
@@ -102,76 +113,6 @@ export default class GamePlayScene extends Phaser.Scene {
         RIGHT_PIRATE_POS.y,
         "pirate"
       );
-    }
-
-    // this.platformA = new Platform(
-    //   this,
-    //   LEFT_PLATFORM_POS.x,
-    //   LEFT_PLATFORM_POS.y
-    // );
-    // this.platformB = new Platform(
-    //   this,
-    //   RIGHT_PLATFORM_POS.x,
-    //   RIGHT_PLATFORM_POS.y,
-    //   true
-    // );
-    // this.pirate = new Pirate(
-    //   this,
-    //   LEFT_PIRATE_POS.x,
-    //   LEFT_PIRATE_POS.y,
-    //   "pirate"
-    // );
-  }
-
-  async spawnPlayerOne(roomId: string) {
-    try {
-      const res = await this.roomService.createRoom(roomId);
-      if (res) {
-        this.platformA = new Platform(this, 0, WOOD_SPRITE_SIZE * 3);
-        this.platformB = new Platform(
-          this,
-          WOOD_SPRITE_SIZE * 13,
-          WOOD_SPRITE_SIZE * 3,
-          true
-        );
-        this.pirate = new Pirate(
-          this,
-          WOOD_SPRITE_SIZE,
-          WOOD_SPRITE_SIZE * 3 + WOOD_SPRITE_SIZE / 2,
-          "pirate"
-        );
-      }
-    } catch (e) {
-      console.log("error creating room: ", e);
-    }
-  }
-
-  async spawnPlayerTwo(roomId: string) {
-    try {
-      const res = await this.roomService.joinRoom(roomId);
-      if (res) {
-        this.platformA = new Platform(
-          this,
-          WOOD_SPRITE_SIZE * 13,
-          WOOD_SPRITE_SIZE * 3
-        );
-        this.platformB = new Platform(this, 0, WOOD_SPRITE_SIZE * 3, true);
-        this.pirate = new Pirate(
-          this,
-          WOOD_SPRITE_SIZE * 16,
-          WOOD_SPRITE_SIZE * 3.5,
-          "pirate"
-        );
-        this.enemy = new Pirate(
-          this,
-          WOOD_SPRITE_SIZE,
-          WOOD_SPRITE_SIZE * 3.5,
-          "pirate",
-          true
-        );
-      }
-    } catch (e) {
-      console.log("failed to join room: ", e);
     }
   }
 

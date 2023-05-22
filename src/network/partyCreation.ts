@@ -47,4 +47,8 @@ export default class StartPartyService {
       });
     });
   }
+
+  getSocket() {
+    return this.socket;
+  }
 }
