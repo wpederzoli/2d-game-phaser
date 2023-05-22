@@ -20,7 +20,6 @@ export default class GamePlayScene extends Phaser.Scene {
 
   init(args: { roomId: string; isHost: boolean }) {
     this.roomService = new RoomService(this, args.roomId, args.isHost);
-    this.spawnPlayer();
   }
 
   preload() {
@@ -37,32 +36,15 @@ export default class GamePlayScene extends Phaser.Scene {
     const scale = Math.max(scaleX, scaleY);
     water.setScale(scale).setScrollFactor(0);
 
+    this.roomService.IsHost() && this.spawnPlayer();
+
     this.input.setDefaultCursor("url(../../assets/cursor.png), pointer");
     this.input.mouse?.disableContextMenu();
-
-    const inputElement = document.createElement("input");
-    inputElement.type = "text";
-
-    const button = document.createElement("button");
-    button.innerHTML = "Create";
-    button.onclick = () => this.spawnPlayerOne(inputElement.value);
-
-    const btn = document.createElement("button");
-    btn.innerHTML = "Join";
-    btn.onclick = () => this.spawnPlayerTwo(inputElement.value);
-
-    const btn2 = document.createElement("button");
-    btn2.innerHTML = "Play";
-    btn2.onclick = () => this.roomService.startTurn();
 
     const countText = document.createElement("div");
     countText.id = "countText";
     countText.innerHTML = "3";
 
-    Phaser.DOM.AddToDOM(inputElement);
-    Phaser.DOM.AddToDOM(button);
-    Phaser.DOM.AddToDOM(btn);
-    Phaser.DOM.AddToDOM(btn2);
     Phaser.DOM.AddToDOM(countText);
   }
 
@@ -90,7 +72,7 @@ export default class GamePlayScene extends Phaser.Scene {
     this.pirate = new Pirate(
       this,
       LEFT_PIRATE_POS.x,
-      LEFT_PLATFORM_POS.y,
+      LEFT_PIRATE_POS.y,
       "pirate"
     );
   }
