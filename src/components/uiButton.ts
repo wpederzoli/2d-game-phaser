@@ -18,8 +18,6 @@ export default class UIButton {
 
     const btnStyle = this.btn.style;
     btnStyle.position = "absolute";
-    btnStyle.left = x + "px";
-    btnStyle.top = y + "px";
     btnStyle.backgroundColor = "#ffffff";
     btnStyle.color = "#000000";
     btnStyle.padding = "10px 20px";
@@ -29,6 +27,8 @@ export default class UIButton {
     btnStyle.fontWeight = "bold";
     btnStyle.width = `${scene.cameras.default.width / 4}px`;
     btnStyle.borderRadius = "10px";
+    btnStyle.left = `${x - this.btn.offsetWidth / 2}px`;
+    btnStyle.top = `${y - this.btn.offsetHeight / 2}px`;
 
     this.btn.onmouseover = () => {
       btnStyle.backgroundColor = "#fffada";

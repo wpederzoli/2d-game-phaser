@@ -20,6 +20,7 @@ export default class SocketConnector {
       if (this.sceneRef.roomService.getUserId() !== userId) {
         this.sceneRef.spawnEnemyPirate();
         this.sceneRef.ui.updateText("Ready to start");
+        this.sceneRef.ui.showStartButton(true);
       }
     });
 
