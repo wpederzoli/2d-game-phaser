@@ -23,13 +23,9 @@ export default class SocketConnector {
     this.socket.on(
       "updatePosition",
       (userId: string, position: { x: number; y: number }) => {
-        console.log("update position received: ", userId);
         if (this.sceneRef.roomService.getUserId() !== userId) {
           this.sceneRef.enemy.setMovePosition(position.x, position.y);
           this.sceneRef.enemy.findPath();
-        } else {
-          this.sceneRef.pirate.setMovePosition(position.x, position.y);
-          this.sceneRef.pirate.findPath();
         }
       }
     );
@@ -47,12 +43,26 @@ export default class SocketConnector {
     });
 
     this.socket.on("count", (count: number) => {
-      this.sceneRef.ui.updateCount(count.toString());
+      count >= 0 && this.sceneRef.ui.updateCount(count.toString());
+      if (count === 0) {
+        const movePos = this.sceneRef.pirate.getMovePosition();
+        this.sceneRef.pirate.setMovePosition(movePos.x, movePos.y);
+        this.sceneRef.pirate.findPath();
+        this.sceneRef.roomService.sendMovePosition(movePos.x, movePos.y);
+        setTimeout(() => {
+          this.sceneRef.roomService.startTurn();
+        }, 3000);
+      }
     });
 
     this.socket.on("playTurn", () => {
       this.sceneRef.pirate.setCanMove(true);
       this.sceneRef.enemy.setCanMove(true);
+    });
+
+    this.socket.on("endTurn", () => {
+      this.sceneRef.pirate.setCanMove(false);
+      this.sceneRef.enemy.setCanMove(false);
     });
 
     this.socket.on(
@@ -74,6 +84,15 @@ export default class SocketConnector {
         this.sceneRef.pirate.destroy();
       }
     });
+
+    this.socket.on("start", (userId: string) => {
+      if (this.sceneRef.roomService.getUserId() === userId) {
+        this.sceneRef.ui.showStartButton(false);
+        this.sceneRef.roomService.startTurn();
+      }
+
+      this.sceneRef.ui.updateText("Make your move");
+    });
   }
 
   sendMovePosition(roomId: string, userId: string, x: number, y: number) {
@@ -86,6 +105,10 @@ export default class SocketConnector {
 
   startCount(roomId: string) {
     this.socket.emit("startCount", roomId);
+  }
+
+  startGame(roomId: string) {
+    this.socket.emit("startGame", roomId);
   }
 
   sendShootPosition(

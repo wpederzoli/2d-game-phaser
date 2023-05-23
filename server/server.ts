@@ -32,6 +32,10 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("startGame", (roomId) => {
+    io.to(roomId).emit("start", socket.id);
+  });
+
   socket.on(
     "movePlayer",
     (roomId: string, userId: string, player: PlayerPosition) => {
@@ -60,6 +64,7 @@ io.on("connection", (socket) => {
       room.playerOne.ready = false;
       room.playerTwo.ready = false;
       io.to(roomId).emit("shoot");
+      io.to(roomId).emit("endTurn");
     }
   });
 
@@ -75,13 +80,16 @@ io.on("connection", (socket) => {
   );
 
   socket.on("startCount", (roomId: string) => {
-    let count = 3;
+    let count = 10;
     let countDownInterval = setInterval(() => {
       io.to(roomId).emit("count", count);
       count--;
-      if (count < 0) {
-        clearInterval(countDownInterval);
+      if (count === -1) {
         io.to(roomId).emit("playTurn");
+      }
+
+      if (count < -1) {
+        clearInterval(countDownInterval);
       }
     }, 1000);
   });

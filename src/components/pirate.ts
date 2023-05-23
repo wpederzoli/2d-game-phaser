@@ -28,7 +28,7 @@ export default class Pirate {
   private canMove: boolean;
   private cannonball: Cannonball;
   private path: Phaser.Math.Vector2[];
-  movePosition: Phaser.Math.Vector2 | undefined;
+  private movePosition: Phaser.Math.Vector2;
 
   constructor(
     scene: GamePlayScene,
@@ -38,6 +38,7 @@ export default class Pirate {
     isEnemy?: boolean
   ) {
     this.sceneRef = scene;
+    this.movePosition = new Phaser.Math.Vector2(x, y);
     this.sprite = scene.physics.add.sprite(x, y, texture);
     this.sprite.setCollideWorldBounds(true);
     this.cannonball = new Cannonball(this.sceneRef);
@@ -48,6 +49,10 @@ export default class Pirate {
 
   setMovePosition(x: number, y: number) {
     this.movePosition = new Phaser.Math.Vector2(x, y);
+  }
+
+  getMovePosition() {
+    return this.movePosition;
   }
 
   setTargetPosition(target: Phaser.Math.Vector2) {
@@ -62,6 +67,10 @@ export default class Pirate {
 
   getPosition() {
     return this.sprite.body.position;
+  }
+
+  getTargetPosition() {
+    return this.cannonball.getTargetPosition();
   }
 
   findPath() {
@@ -260,7 +269,7 @@ export default class Pirate {
   }
 
   update(): void {
-    if (this.movePosition && this.path.length > 0) {
+    if (this.path.length > 0) {
       const { x: targetX, y: targetY } = this.path[0];
       const distance = Phaser.Math.Distance.Between(
         this.sprite.x,
@@ -273,7 +282,6 @@ export default class Pirate {
         this.path.splice(0, 1);
         if (this.path.length === 0) {
           this.sprite.setVelocity(0);
-          this.movePosition = undefined;
           this.setCanMove(false);
           if (!this.isEnemy) {
             this.sceneRef.roomService.readyToShoot();
