@@ -4,6 +4,7 @@ import GamePlayScene from "../scenes/gameplay";
 export default class SocketConnector {
   private socket: Socket;
   private sceneRef: GamePlayScene;
+  private timer: NodeJS.Timeout;
 
   constructor(connection: Socket, scene: GamePlayScene) {
     this.socket = connection;
@@ -43,14 +44,15 @@ export default class SocketConnector {
     });
 
     this.socket.on("count", (count: number) => {
-      count >= 0 && this.sceneRef.ui.updateCount(count.toString());
+      count > 0 && this.sceneRef.ui.updateCount(count.toString());
       if (count === 0) {
+        this.sceneRef.ui.updateCount("");
         const movePos = this.sceneRef.pirate.getMovePosition();
         this.sceneRef.pirate.setMovePosition(movePos.x, movePos.y);
         this.sceneRef.pirate.findPath();
         this.sceneRef.roomService.sendMovePosition(movePos.x, movePos.y);
-        setTimeout(() => {
-          this.sceneRef.roomService.startTurn();
+        this.timer = setTimeout(() => {
+          !this.sceneRef.gameOver && this.sceneRef.roomService.startTurn();
         }, 3000);
       }
     });
@@ -83,6 +85,10 @@ export default class SocketConnector {
       if (this.sceneRef.roomService.getUserId() !== userId) {
         this.sceneRef.pirate.destroy();
       }
+      this.sceneRef.gameOver = true;
+      clearTimeout(this.timer);
+      this.sceneRef.ui.updateText("Game Over");
+      this.sceneRef.ui.updateCount("");
     });
 
     this.socket.on("start", (userId: string) => {
