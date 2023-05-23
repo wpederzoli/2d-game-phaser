@@ -44,16 +44,30 @@ export default class SocketConnector {
     });
 
     this.socket.on("count", (count: number) => {
-      count > 0 && this.sceneRef.ui.updateCount(count.toString());
-      if (count === 0) {
-        this.sceneRef.ui.updateCount("");
-        const movePos = this.sceneRef.pirate.getMovePosition();
-        this.sceneRef.pirate.setMovePosition(movePos.x, movePos.y);
-        this.sceneRef.pirate.findPath();
-        this.sceneRef.roomService.sendMovePosition(movePos.x, movePos.y);
-        this.timer = setTimeout(() => {
-          !this.sceneRef.gameOver && this.sceneRef.roomService.startTurn();
-        }, 3000);
+      if (this.sceneRef.roomService.IsHost()) {
+        count > 0 && this.sceneRef.ui.updateCount(count.toString());
+        if (count === 0) {
+          this.sceneRef.ui.updateCount("");
+          const movePos = this.sceneRef.pirate.getMovePosition();
+          this.sceneRef.pirate.setMovePosition(movePos.x, movePos.y);
+          this.sceneRef.pirate.findPath();
+          this.sceneRef.roomService.sendMovePosition(movePos.x, movePos.y);
+          this.timer = setTimeout(() => {
+            !this.sceneRef.gameOver && this.sceneRef.roomService.startTurn();
+          }, 3000);
+        }
+      } else {
+        count > 0 && this.sceneRef.ui.updateCount(count.toString());
+        if (count === 0) {
+          this.sceneRef.ui.updateCount("");
+          const movePos = this.sceneRef.pirate.getMovePosition();
+          this.sceneRef.pirate.setMovePosition(movePos.x, movePos.y);
+          this.sceneRef.pirate.findPath();
+          this.sceneRef.roomService.sendMovePosition(movePos.x, movePos.y);
+          this.timer = setTimeout(() => {
+            !this.sceneRef.gameOver && this.sceneRef.roomService.startTurn();
+          }, 3000);
+        }
       }
     });
 
