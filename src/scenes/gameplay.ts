@@ -13,6 +13,7 @@ import GamePlayUI from "../components/gamePlayUI";
 
 export default class GamePlayScene extends Phaser.Scene {
   roomService: RoomService;
+  gameOver: boolean;
   platformA: Platform;
   platformB: Platform;
   pirate: Pirate;
@@ -21,6 +22,7 @@ export default class GamePlayScene extends Phaser.Scene {
 
   constructor() {
     super({ key: "GamePlayScene" });
+    this.gameOver = false;
   }
 
   init(args: {
