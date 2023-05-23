@@ -38,15 +38,15 @@ export default class GamePlayUI {
     this.text.update(text, fontSize);
   }
 
-  updateLeftText(text: string) {
-    this.left_bottom_txt.update(text);
-  }
-
-  updateRightText(text: string) {
-    this.right_bottom_txt.update(text);
-  }
-
   updateCount(count: string) {
+    if (!this.count) {
+      this.count = new UIText(
+        this.sceneRef,
+        this.sceneRef.cameras.main.width / 2,
+        125,
+        "10"
+      );
+    }
     this.count.update(count);
   }
 

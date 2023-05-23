@@ -26,9 +26,10 @@ export default class Pirate {
   private sceneRef: GamePlayScene;
   private isEnemy: boolean;
   private canMove: boolean;
+  private play: boolean;
   private cannonball: Cannonball;
   private path: Phaser.Math.Vector2[];
-  movePosition: Phaser.Math.Vector2 | undefined;
+  movePosition: Phaser.Math.Vector2;
 
   constructor(
     scene: GamePlayScene,
@@ -39,15 +40,21 @@ export default class Pirate {
   ) {
     this.sceneRef = scene;
     this.sprite = scene.physics.add.sprite(x, y, texture);
+    this.movePosition = new Phaser.Math.Vector2(x, y);
     this.sprite.setCollideWorldBounds(true);
     this.cannonball = new Cannonball(this.sceneRef);
     this.canMove = false;
+    this.play = false;
     this.isEnemy = isEnemy || false;
     this.path = [];
   }
 
   setMovePosition(x: number, y: number) {
     this.movePosition = new Phaser.Math.Vector2(x, y);
+  }
+
+  getMovePosition() {
+    return this.movePosition;
   }
 
   setTargetPosition(target: Phaser.Math.Vector2) {
@@ -62,6 +69,18 @@ export default class Pirate {
 
   getPosition() {
     return this.sprite.body.position;
+  }
+
+  getTargetPosition() {
+    return this.cannonball.getTargetPosition();
+  }
+
+  setCanPlay(play: boolean) {
+    this.play = play;
+  }
+
+  canPlay() {
+    return this.play;
   }
 
   findPath() {

@@ -79,13 +79,16 @@ io.on("connection", (socket) => {
   );
 
   socket.on("startCount", (roomId: string) => {
-    let count = 3;
+    let count = 10;
     let countDownInterval = setInterval(() => {
       io.to(roomId).emit("count", count);
       count--;
-      if (count < 0) {
-        clearInterval(countDownInterval);
+      if (count === -1) {
         io.to(roomId).emit("playTurn");
+      }
+
+      if (count < -1) {
+        clearInterval(countDownInterval);
       }
     }, 1000);
   });

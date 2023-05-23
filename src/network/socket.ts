@@ -46,12 +46,16 @@ export default class SocketConnector {
     });
 
     this.socket.on("count", (count: number) => {
-      this.sceneRef.ui.updateCount(count.toString());
+      count >= 0 && this.sceneRef.ui.updateCount(count.toString());
+      if (count === 0) {
+        this.sceneRef.pirate.findPath();
+      }
     });
 
     this.socket.on("playTurn", () => {
       this.sceneRef.pirate.setCanMove(true);
       this.sceneRef.enemy.setCanMove(true);
+      this.sceneRef.pirate.setCanPlay(false);
     });
 
     this.socket.on(
@@ -78,6 +82,7 @@ export default class SocketConnector {
       console.log("start received");
       if (this.sceneRef.roomService.getUserId() === userId) {
         this.sceneRef.ui.showStartButton(false);
+        this.sceneRef.roomService.startTurn();
       }
 
       this.sceneRef.ui.updateText("Make your move");
@@ -93,6 +98,7 @@ export default class SocketConnector {
   }
 
   startCount(roomId: string) {
+    this.sceneRef.pirate.setCanPlay(true);
     this.socket.emit("startCount", roomId);
   }
 

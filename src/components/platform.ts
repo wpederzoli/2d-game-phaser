@@ -64,13 +64,21 @@ export default class Platform {
       this.sceneRef.children.getByName("hover")?.destroy();
     });
     block.on("pointerdown", async () => {
-      if (!enemy && this.sceneRef.input.activePointer.leftButtonDown()) {
+      if (
+        !enemy &&
+        this.sceneRef.input.activePointer.leftButtonDown() &&
+        this.sceneRef.pirate.canPlay()
+      ) {
         this.sceneRef.pirate?.setMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
         this.sceneRef.pirate?.findPath();
         this.sceneRef.roomService.sendMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
       }
 
-      if (enemy && this.sceneRef.input.activePointer.rightButtonDown()) {
+      if (
+        enemy &&
+        this.sceneRef.input.activePointer.rightButtonDown() &&
+        this.sceneRef.pirate.canPlay()
+      ) {
         const newPos = new Phaser.Math.Vector2(x, y);
         this.sceneRef.pirate.setTargetPosition(newPos);
         this.sceneRef.roomService.sendShootPosition(newPos);
