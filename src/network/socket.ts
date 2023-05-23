@@ -26,9 +26,6 @@ export default class SocketConnector {
         if (this.sceneRef.roomService.getUserId() !== userId) {
           this.sceneRef.enemy.setMovePosition(position.x, position.y);
           this.sceneRef.enemy.findPath();
-        } else {
-          this.sceneRef.pirate.setMovePosition(position.x, position.y);
-          this.sceneRef.pirate.findPath();
         }
       }
     );
@@ -48,14 +45,24 @@ export default class SocketConnector {
     this.socket.on("count", (count: number) => {
       count >= 0 && this.sceneRef.ui.updateCount(count.toString());
       if (count === 0) {
+        const movePos = this.sceneRef.pirate.getMovePosition();
+        this.sceneRef.pirate.setMovePosition(movePos.x, movePos.y);
         this.sceneRef.pirate.findPath();
+        this.sceneRef.roomService.sendMovePosition(movePos.x, movePos.y);
+        setTimeout(() => {
+          this.sceneRef.roomService.startTurn();
+        }, 3000);
       }
     });
 
     this.socket.on("playTurn", () => {
       this.sceneRef.pirate.setCanMove(true);
       this.sceneRef.enemy.setCanMove(true);
-      this.sceneRef.pirate.setCanPlay(false);
+    });
+
+    this.socket.on("endTurn", () => {
+      this.sceneRef.pirate.setCanMove(false);
+      this.sceneRef.enemy.setCanMove(false);
     });
 
     this.socket.on(
@@ -79,7 +86,6 @@ export default class SocketConnector {
     });
 
     this.socket.on("start", (userId: string) => {
-      console.log("start received");
       if (this.sceneRef.roomService.getUserId() === userId) {
         this.sceneRef.ui.showStartButton(false);
         this.sceneRef.roomService.startTurn();
@@ -98,7 +104,6 @@ export default class SocketConnector {
   }
 
   startCount(roomId: string) {
-    this.sceneRef.pirate.setCanPlay(true);
     this.socket.emit("startCount", roomId);
   }
 

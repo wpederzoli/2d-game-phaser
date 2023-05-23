@@ -64,6 +64,7 @@ io.on("connection", (socket) => {
       room.playerOne.ready = false;
       room.playerTwo.ready = false;
       io.to(roomId).emit("shoot");
+      io.to(roomId).emit("endTurn");
     }
   });
 
