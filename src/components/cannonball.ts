@@ -32,6 +32,7 @@ export default class Cannonball {
         ) {
           this.sceneRef.enemy.destroy();
           this.sceneRef.roomService.playerHit();
+          this.sceneRef.children.getByName("targetSelect").destroy();
         }
         cannonball.destroy();
       },
