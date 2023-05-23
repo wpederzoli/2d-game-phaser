@@ -32,6 +32,10 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("startGame", (roomId) => {
+    io.to(roomId).emit("start", socket.id);
+  });
+
   socket.on(
     "movePlayer",
     (roomId: string, userId: string, player: PlayerPosition) => {

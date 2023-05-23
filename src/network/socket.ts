@@ -73,6 +73,15 @@ export default class SocketConnector {
         this.sceneRef.pirate.destroy();
       }
     });
+
+    this.socket.on("start", (userId: string) => {
+      console.log("start received");
+      if (this.sceneRef.roomService.getUserId() === userId) {
+        this.sceneRef.ui.showStartButton(false);
+      }
+
+      this.sceneRef.ui.updateText("Make your move");
+    });
   }
 
   sendMovePosition(roomId: string, userId: string, x: number, y: number) {
@@ -85,6 +94,10 @@ export default class SocketConnector {
 
   startCount(roomId: string) {
     this.socket.emit("startCount", roomId);
+  }
+
+  startGame(roomId: string) {
+    this.socket.emit("startGame", roomId);
   }
 
   sendShootPosition(

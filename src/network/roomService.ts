@@ -49,6 +49,10 @@ export default class RoomService {
     this.socketConnection.startCount(this.roomId);
   }
 
+  startGame() {
+    this.socketConnection.startGame(this.roomId);
+  }
+
   playerHit() {
     this.socketConnection.sendPlayerHit(this.roomId, this.userId);
   }
