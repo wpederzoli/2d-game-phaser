@@ -283,6 +283,7 @@ export default class Pirate {
         if (this.path.length === 0) {
           this.sprite.setVelocity(0);
           this.setCanMove(false);
+          this.sceneRef.children.getByName("selected")?.destroy();
           if (!this.isEnemy) {
             this.sceneRef.roomService.readyToShoot();
           }

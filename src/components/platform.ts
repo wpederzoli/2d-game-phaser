@@ -68,12 +68,36 @@ export default class Platform {
         this.sceneRef.pirate?.setMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
         this.sceneRef.pirate?.findPath();
         this.sceneRef.roomService.sendMovePosition(x, y - WOOD_SPRITE_SIZE / 2);
+        const selectRect = this.sceneRef.add.rectangle(
+          x,
+          y,
+          block.width,
+          block.height,
+          12123,
+          0.5
+        );
+        this.sceneRef.children
+          .getChildren()
+          .forEach((child) => child.name === "selected" && child.destroy());
+        selectRect.setName("selected");
       }
 
       if (enemy && this.sceneRef.input.activePointer.rightButtonDown()) {
         const newPos = new Phaser.Math.Vector2(x, y);
         this.sceneRef.pirate.setTargetPosition(newPos);
         this.sceneRef.roomService.sendShootPosition(newPos);
+        const selectRect = this.sceneRef.add.rectangle(
+          x,
+          y,
+          block.width,
+          block.height,
+          34345,
+          0.5
+        );
+        this.sceneRef.children
+          .getChildren()
+          .forEach((child) => child.name === "targetSelect" && child.destroy());
+        selectRect.setName("targetSelect");
       }
     });
   };
