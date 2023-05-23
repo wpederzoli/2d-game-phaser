@@ -6,6 +6,15 @@ This mini game was developed as part of a challenge with the following instructi
 
 https://github.com/wpederzoli/2d-game-phaser/assets/29479944/fd92d980-7376-4790-bf9a-aa3d1268d87b
 
+# To run locally
+This project handles Font and Bakend so to run it locally you'd just need to:
+```
+npm install
+npm run start
+npm run server
+
+```
+
 # Pirate Dodgeball
 The goal of the game is pretty simple, you have to hit the enemy pirate.
 
